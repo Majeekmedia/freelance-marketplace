@@ -26,13 +26,127 @@
         .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
         .topbar{border-bottom:1px solid var(--rule);background:#fff;position:sticky;top:0;z-index:20}
-        .topbar-inner{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,32px);min-height:64px;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+        .topbar-inner{
+            max-width:1200px;margin:0 auto;
+            padding:0 clamp(16px,4vw,32px);
+            min-height:64px;
+            display:flex;align-items:center;gap:1.5rem;
+        }
         .brand{display:flex;align-items:center;gap:.55rem;font-family:var(--serif);font-size:1.2rem;flex:none}
         .brand-mark{width:24px;height:24px;border-radius:5px;background:var(--forest);display:grid;place-items:center;color:#fff;font-family:var(--sans);font-size:.68rem;font-weight:600;flex:none}
         .brand-logo{height:24px;width:auto}
-        .topnav{display:flex;gap:1.25rem;margin-left:auto;align-items:center;font-size:.875rem;flex-wrap:wrap}
+
+        /* Inline navigation. Present on desktop only; on phones the bottom nav
+           and the hamburger carry these destinations instead. */
+        .topnav{display:flex;gap:1.25rem;align-items:center;font-size:.875rem}
         .topnav a{color:var(--ink-2)}
         .topnav a:hover{color:var(--ink)}
+
+        /*
+         * Action cluster, right-hand side.
+         *
+         * `margin-left:auto` pushes the whole cluster to the far right, which is
+         * what anchors the brand to the left without needing a spacer element.
+         */
+        .topbar-actions{display:flex;align-items:center;gap:.25rem;margin-left:auto}
+
+        .icon-btn{
+            width:38px;height:38px;
+            display:inline-grid;place-items:center;
+            border-radius:9px;
+            border:1px solid transparent;
+            background:none;
+            color:var(--ink-2);
+            cursor:pointer;
+            padding:0;
+            position:relative;
+            -webkit-tap-highlight-color:transparent;
+        }
+        .icon-btn:hover{background:var(--paper-2);color:var(--ink)}
+        .icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+        /*
+         * Dropdowns use the native popover attribute where available, so the
+         * panel closes on Escape and on an outside click without any JavaScript.
+         * `position:absolute` + anchor positioning is not used: it would require
+         * feature detection, and the panels are anchored from a positioned
+         * wrapper instead, which works everywhere.
+         */
+        .menu{position:relative}
+        .menu-panel{
+            position:absolute;
+            top:calc(100% + .45rem);
+            right:0;
+            min-width:230px;
+            background:#fff;
+            border:1px solid var(--rule);
+            border-radius:12px;
+            box-shadow:0 12px 32px rgba(22,20,15,.13);
+            padding:.4rem;
+            z-index:60;
+            display:none;
+        }
+        .menu[data-open="true"] .menu-panel{display:block}
+
+        .menu-panel a,
+        .menu-panel button{
+            display:flex;align-items:center;gap:.6rem;
+            width:100%;
+            padding:.55rem .6rem;
+            border-radius:8px;
+            border:0;
+            background:none;
+            font:inherit;
+            font-size:.855rem;
+            color:var(--ink);
+            text-align:left;
+            cursor:pointer;
+        }
+        .menu-panel a:hover,
+        .menu-panel button:hover{background:var(--paper-2)}
+        .menu-panel svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;color:var(--ink-3)}
+        .menu-panel hr{border:0;border-top:1px solid var(--rule);margin:.35rem .25rem}
+
+        /* Identity block at the top of the account panel. */
+        .menu-head{padding:.5rem .6rem .65rem;border-bottom:1px solid var(--rule);margin-bottom:.3rem}
+        .menu-head-name{font-size:.875rem;font-weight:600;line-height:1.3}
+        .menu-head-meta{font-size:.75rem;color:var(--ink-3);margin-top:.15rem}
+
+        /* Notification empty state. Honest: nothing has been generated yet. */
+        .menu-empty{padding:1.5rem 1rem;text-align:center;max-width:260px}
+        .menu-empty svg{width:26px;height:26px;stroke:var(--rule-2);fill:none;stroke-width:1.6;margin-bottom:.6rem}
+        .menu-empty-title{font-size:.85rem;font-weight:500;margin:0 0 .25rem}
+        .menu-empty-body{font-size:.78rem;color:var(--ink-3);margin:0;line-height:1.5}
+
+        .avatar{
+            width:30px;height:30px;border-radius:50%;
+            background:var(--forest);color:#fff;
+            display:grid;place-items:center;
+            font-size:.72rem;font-weight:600;
+            flex:none;
+            letter-spacing:.01em;
+        }
+
+        /* Hamburger: mobile only. */
+        .menu-toggle{display:none}
+
+        /* Small red dot for unread state. Never rendered without real data. */
+        .dot-badge{
+            position:absolute;top:7px;right:8px;
+            width:7px;height:7px;border-radius:50%;
+            background:var(--danger);
+            border:1.5px solid #fff;
+        }
+
+        /* Phone layout: brand left, three icons right. */
+        @media (max-width:700px){
+            .topbar-inner{gap:.5rem;padding-top:.5rem;padding-bottom:.5rem;min-height:0}
+            .brand{font-size:1.05rem}
+            .topnav{display:none}
+            .menu-toggle{display:inline-grid}
+            .icon-btn{width:40px;height:40px}
+            .menu-panel{min-width:0;width:min(calc(100vw - 2rem),280px);right:0}
+        }
 
         .wrap{max-width:1200px;margin:0 auto;padding:clamp(24px,4vw,44px) clamp(16px,4vw,32px) 4rem}
         h1{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.1;letter-spacing:-.02em;margin:0 0 .35rem}
@@ -201,24 +315,6 @@
          * Mobile: <= 700px
          * ------------------------------------------------------------------ */
         @media (max-width:700px){
-            .topbar-inner{gap:.75rem;padding-top:.6rem;padding-bottom:.6rem;min-height:0}
-            .brand{font-size:1.05rem}
-            .topnav{
-                width:100%;
-                margin-left:0;
-                gap:.15rem;
-                font-size:.82rem;
-                overflow-x:auto;
-                -webkit-overflow-scrolling:touch;
-                scrollbar-width:none;
-                padding-bottom:.15rem;
-            }
-            .topnav::-webkit-scrollbar{display:none}
-            .topnav a{padding:.4rem .5rem;border-radius:6px;white-space:nowrap}
-            .topnav a:hover{background:var(--paper-2)}
-            .topnav form{margin-left:auto}
-            .topnav .btn-sm{padding:.35rem .55rem}
-
             .wrap{padding-top:1.35rem}
             h1{font-size:1.45rem}
             .card{padding:1.1rem;border-radius:12px}
@@ -258,8 +354,13 @@
             {{ \App\Support\SiteSettings::brandName() }}
         </a>
 
-        <nav class="topnav">
-            @auth
+        @auth
+            {{--
+                Inline navigation: desktop only. On phones these destinations are
+                served by the bottom nav, so repeating them in the header was
+                duplicate chrome competing for the same space.
+            --}}
+            <nav class="topnav" aria-label="Sections">
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.users.index') }}">Accounts</a>
                 @endif
@@ -272,12 +373,149 @@
                 @endif
                 <a href="{{ route('jobs.index') }}">Browse jobs</a>
                 <a href="{{ route('dashboard') }}">Dashboard</a>
-                <form method="POST" action="{{ route('logout') }}" style="margin:0">
-                    @csrf
-                    <button class="btn btn-secondary btn-sm" type="submit">Sign out</button>
-                </form>
-            @endauth
-        </nav>
+            </nav>
+
+            @php
+                $navUser = auth()->user();
+                $navName = $navUser->name;
+                // Initials for the avatar chip: first letter of the first two
+                // words. Avoids a generic silhouette while staying text-only, so
+                // nothing has to be uploaded before the header looks finished.
+                $navParts = preg_split('/\s+/', trim($navName)) ?: [];
+                $navInitials = strtoupper(
+                    mb_substr($navParts[0] ?? '', 0, 1)
+                    .mb_substr($navParts[1] ?? ($navParts[0] ?? ''), 0, 1)
+                );
+            @endphp
+
+            <div class="topbar-actions">
+                {{-- Notifications --}}
+                <div class="menu" data-menu data-open="false">
+                    <button class="icon-btn" type="button" data-menu-toggle
+                            aria-expanded="false" aria-controls="notifications-panel"
+                            aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/>
+                            <path d="M10.3 20a2 2 0 0 0 3.4 0"/>
+                        </svg>
+                    </button>
+
+                    <div class="menu-panel" id="notifications-panel" role="dialog" aria-label="Notifications">
+                        {{--
+                            Honest empty state. There is no notifications table yet
+                            (it arrives with messaging in M6), so inventing an
+                            unread count would be exactly the false-live-data
+                            failure recorded as L-004. The dot only renders when
+                            real unread rows exist.
+                        --}}
+                        <div class="menu-empty">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/>
+                                <path d="M10.3 20a2 2 0 0 0 3.4 0"/>
+                            </svg>
+                            <p class="menu-empty-title">No notifications yet</p>
+                            <p class="menu-empty-body">
+                                You'll hear from us when there's an application, a
+                                hire, or a milestone update.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Account --}}
+                <div class="menu" data-menu data-open="false">
+                    <button class="icon-btn" type="button" data-menu-toggle
+                            aria-expanded="false" aria-controls="account-panel"
+                            aria-label="Your account menu" style="width:auto;padding:0 .3rem;gap:.3rem">
+                        <span class="avatar" aria-hidden="true">{{ $navInitials ?: '?' }}</span>
+                    </button>
+
+                    <div class="menu-panel" id="account-panel" role="dialog" aria-label="Account">
+                        <div class="menu-head">
+                            <div class="menu-head-name">{{ $navName }}</div>
+                            <div class="menu-head-meta">
+                                {{ $navUser->type->label() }} · {{ $navUser->status->label() }}
+                            </div>
+                        </div>
+
+                        <a href="{{ route('dashboard') }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/></svg>
+                            Dashboard
+                        </a>
+
+                        @if($navUser->isFreelancer())
+                            <a href="{{ route('profile.edit') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>
+                                Your profile
+                            </a>
+                        @endif
+
+                        @if($navUser->isPoster())
+                            <a href="{{ route('jobs.manage.index') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/></svg>
+                                Your jobs
+                            </a>
+                        @endif
+
+                        @if($navUser->isAdmin())
+                            <a href="{{ route('admin.users.index') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19a6.4 6.4 0 0 1 12.4 0"/><path d="M17 8.5h4M19 6.5v4"/></svg>
+                                Manage accounts
+                            </a>
+                        @endif
+
+                        <hr>
+
+                        <form method="POST" action="{{ route('logout') }}" style="margin:0">
+                            @csrf
+                            <button type="submit">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+                                Sign out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                {{-- More: mobile only. --}}
+                <div class="menu menu-toggle" data-menu data-open="false">
+                    <button class="icon-btn" type="button" data-menu-toggle
+                            aria-expanded="false" aria-controls="more-panel"
+                            aria-label="More">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>
+                        </svg>
+                    </button>
+
+                    <div class="menu-panel" id="more-panel" role="dialog" aria-label="More">
+                        <a href="{{ route('jobs.index') }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12h18"/></svg>
+                            Browse jobs
+                        </a>
+                        <a href="{{ route('freelancers.index') }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19a6.4 6.4 0 0 1 12.4 0"/><path d="M17 8.5h4M19 6.5v4"/></svg>
+                            Find freelancers
+                        </a>
+                        @if($navUser->isPoster())
+                            <a href="{{ route('jobs.manage.create') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                                Post a job
+                            </a>
+                        @endif
+                        @if($navUser->isFreelancer())
+                            <a href="{{ route('portfolio.index') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 15 5-4 4 3 3-2 6 4"/></svg>
+                                Portfolio
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="topbar-actions">
+                <a class="btn btn-secondary btn-sm" href="{{ route('login') }}">Sign in</a>
+                <a class="btn btn-sm" href="{{ route('register') }}">Create account</a>
+            </div>
+        @endauth
     </div>
 </header>
 
@@ -359,5 +597,64 @@
         @endif
     </nav>
 @endauth
+
+<script>
+/*
+ * Header menus.
+ *
+ * Deliberately a few lines of plain JavaScript rather than a framework or an
+ * Alpine import: the whole behaviour is "open one, close the others, close on
+ * Escape, close on outside click". Shipping a dependency for that would be more
+ * to load, more to keep patched, and no easier to read.
+ *
+ * `aria-expanded` is kept in sync because the panel's visibility is a CSS class,
+ * which assistive technology cannot infer on its own.
+ */
+(function () {
+    var menus = Array.prototype.slice.call(document.querySelectorAll('[data-menu]'));
+    if (!menus.length) return;
+
+    function closeAll(except) {
+        menus.forEach(function (menu) {
+            if (menu === except) return;
+            menu.setAttribute('data-open', 'false');
+            var btn = menu.querySelector('[data-menu-toggle]');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    menus.forEach(function (menu) {
+        var btn = menu.querySelector('[data-menu-toggle]');
+        if (!btn) return;
+
+        btn.addEventListener('click', function (event) {
+            event.stopPropagation();
+            var isOpen = menu.getAttribute('data-open') === 'true';
+            closeAll(menu);
+            menu.setAttribute('data-open', isOpen ? 'false' : 'true');
+            btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        });
+
+        // A click inside the panel should not bubble out and close it — but a
+        // link should still navigate normally.
+        var panel = menu.querySelector('.menu-panel');
+        if (panel) {
+            panel.addEventListener('click', function (event) { event.stopPropagation(); });
+        }
+    });
+
+    document.addEventListener('click', function () { closeAll(null); });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape') return;
+        var open = menus.filter(function (m) { return m.getAttribute('data-open') === 'true'; });
+        if (!open.length) return;
+        var btn = open[0].querySelector('[data-menu-toggle]');
+        closeAll(null);
+        // Return focus to the trigger so keyboard users are not stranded.
+        if (btn) btn.focus();
+    });
+})();
+</script>
 </body>
 </html>
