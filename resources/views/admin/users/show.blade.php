@@ -7,15 +7,18 @@
 <p class="sub">{{ $user->email }}</p>
 
 <div class="card">
-    <table>
-        <tbody>
-            <tr><th style="width:140px">Type</th><td>{{ $user->type->label() }}</td></tr>
-            <tr><th>Status</th><td><span class="badge badge-{{ $user->status->value }}">{{ $user->status->label() }}</span></td></tr>
-            <tr><th>Joined</th><td>{{ $user->created_at->format('j F Y, H:i') }}</td></tr>
-            <tr><th>Can sign in</th><td>{{ $user->canAuthenticate() ? 'Yes' : 'No' }}</td></tr>
-            <tr><th>Can act</th><td>{{ $user->canAct() ? 'Yes' : 'No' }}</td></tr>
-        </tbody>
-    </table>
+    {{--
+        This was a two-column table of label/value pairs. It is not tabular data
+        — it is a description list — so <dl> is both the more correct element and
+        the one that reflows on a phone without any width gymnastics.
+    --}}
+    <dl class="facts">
+        <div class="fact-row"><dt>Type</dt><dd>{{ $user->type->label() }}</dd></div>
+        <div class="fact-row"><dt>Status</dt><dd><span class="badge badge-{{ $user->status->value }}">{{ $user->status->label() }}</span></dd></div>
+        <div class="fact-row"><dt>Joined</dt><dd>{{ $user->created_at->format('j F Y, H:i') }}</dd></div>
+        <div class="fact-row"><dt>Can sign in</dt><dd>{{ $user->canAuthenticate() ? 'Yes' : 'No' }}</dd></div>
+        <div class="fact-row"><dt>Can act</dt><dd>{{ $user->canAct() ? 'Yes' : 'No' }}</dd></div>
+    </dl>
 </div>
 
 <div class="card">

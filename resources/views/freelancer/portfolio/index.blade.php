@@ -41,14 +41,14 @@
 </div>
 
 <div class="card" style="padding:0;overflow:hidden;margin-top:1rem">
-    <table>
+    <table class="responsive">
         <thead>
             <tr><th>Title</th><th>Link</th><th style="text-align:right">Actions</th></tr>
         </thead>
         <tbody>
             @forelse ($items as $item)
                 <tr>
-                    <td>
+                    <td class="cell-primary" data-label="Title">
                         {{ $item->title }}
                         {{-- Inline edit. <details> keeps this working with no JS,
                              and the form posts to the same authorised route a
@@ -74,10 +74,10 @@
                             </form>
                         </details>
                     </td>
-                    <td style="color:var(--ink-3);font-size:.82rem">
+                    <td data-label="Link" style="color:var(--ink-3);font-size:.82rem">
                         {{ $item->safeExternalUrl() ? 'Link' : '—' }}
                     </td>
-                    <td>
+                    <td class="cell-actions">
                         <div class="actions">
                             <form method="POST" action="{{ route('portfolio.destroy', $item) }}">
                                 @csrf

@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobManageController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicDirectoryController;
@@ -76,6 +78,49 @@ Route::middleware('auth')->group(function (): void {
 
 Route::get('/freelancers', [PublicDirectoryController::class, 'freelancers'])->name('freelancers.index');
 Route::get('/freelancers/{freelancer}', [ProfileController::class, 'show'])->name('freelancers.show');
+
+/*
+|--------------------------------------------------------------------------
+| Public jobs
+|--------------------------------------------------------------------------
+| A draft or archived job 404s rather than 403s: a 403 would confirm that a
+| given id exists, which would let anyone enumerate unannounced work.
+|
+| `{job}` binds by id for now. Slugs would be friendlier but must be unique
+| and immutable-ish; that is a later refinement, not a correctness issue.
+*/
+
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/{job}', [JobController::class, 'show'])
+    ->whereNumber('job')
+    ->name('jobs.show');
+
+/*
+|--------------------------------------------------------------------------
+| Poster job management
+|--------------------------------------------------------------------------
+| Drafts are created and edited here. There is deliberately NO publish route:
+| a job becomes public only when EscrowService has moved the budget into an
+| escrow hold, which is a money operation, not a form submission.
+*/
+
+Route::middleware(['auth', 'account'])->group(function (): void {
+    Route::get('/jobs/manage', [JobManageController::class, 'index'])->name('jobs.manage.index');
+    Route::get('/jobs/manage/create', [JobManageController::class, 'create'])->name('jobs.manage.create');
+    Route::post('/jobs/manage', [JobManageController::class, 'store'])->name('jobs.manage.store');
+    Route::get('/jobs/manage/{job}', [JobManageController::class, 'show'])
+        ->whereNumber('job')
+        ->name('jobs.manage.show');
+    Route::get('/jobs/manage/{job}/edit', [JobManageController::class, 'edit'])
+        ->whereNumber('job')
+        ->name('jobs.manage.edit');
+    Route::put('/jobs/manage/{job}', [JobManageController::class, 'update'])
+        ->whereNumber('job')
+        ->name('jobs.manage.update');
+    Route::delete('/jobs/manage/{job}', [JobManageController::class, 'destroy'])
+        ->whereNumber('job')
+        ->name('jobs.manage.destroy');
+});
 
 /*
 |--------------------------------------------------------------------------

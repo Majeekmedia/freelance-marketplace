@@ -34,7 +34,7 @@
 </form>
 
 <div class="card" style="padding:0;overflow:hidden">
-    <table>
+    <table class="responsive">
         <thead>
             <tr>
                 <th>Name</th>
@@ -48,12 +48,14 @@
         <tbody>
             @forelse ($users as $user)
                 <tr>
-                    <td>{{ $user->name }}</td>
-                    <td style="color:var(--ink-3)">{{ $user->email }}</td>
-                    <td><span class="badge badge-{{ $user->type->value }}">{{ $user->type->label() }}</span></td>
-                    <td><span class="badge badge-{{ $user->status->value }}">{{ $user->status->label() }}</span></td>
-                    <td style="color:var(--ink-3)">{{ $user->created_at->format('j M Y') }}</td>
-                    <td>
+                    <td class="cell-primary" data-label="Name">
+                        <a href="{{ route('admin.users.show', $user) }}" style="font-weight:500">{{ $user->name }}</a>
+                    </td>
+                    <td data-label="Email" style="color:var(--ink-3)">{{ $user->email }}</td>
+                    <td data-label="Type"><span class="badge badge-{{ $user->type->value }}">{{ $user->type->label() }}</span></td>
+                    <td data-label="Status"><span class="badge badge-{{ $user->status->value }}">{{ $user->status->label() }}</span></td>
+                    <td data-label="Joined" style="color:var(--ink-3)">{{ $user->created_at->format('j M Y') }}</td>
+                    <td class="cell-actions">
                         <div class="actions">
                             @if ($user->isPending())
                                 <form method="POST" action="{{ route('admin.users.approve', $user) }}">

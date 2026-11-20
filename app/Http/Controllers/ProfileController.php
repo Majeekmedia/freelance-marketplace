@@ -29,6 +29,13 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user();
+
+        // Only a freelancer has a profile. Without this, a poster could open the
+        // editor and create a freelancer profile for themselves — which would
+        // then make them visible in the public freelancer directory as a
+        // provider of work they are not.
+        abort_unless($user->isFreelancer(), 403, 'Only freelancers have a public profile.');
+
         $profile = $user->freelancerProfile ?? new FreelancerProfile();
 
         return view('freelancer.profile.edit', [

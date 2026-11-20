@@ -105,6 +105,12 @@ class User extends Authenticatable
             ->orderBy('id');
     }
 
+    /** Jobs this user posted (poster role). */
+    public function postedJobs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Job::class, 'poster_id')->latest();
+    }
+
     // ---------------------------------------------------------------- scopes
 
     /** @param  Builder<User>  $query */

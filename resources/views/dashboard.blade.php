@@ -29,9 +29,28 @@
 
     @elseif ($dashboardView === 'poster')
         <h2 style="font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .6rem">Your hiring</h2>
-        <p style="font-size:.875rem;color:var(--ink-2);margin:0">
-            Posting jobs, funding escrow and reviewing applicants arrive in milestone M4–M7.
-        </p>
+        @php
+            $jobCount = auth()->user()->postedJobs()->count();
+            $draftCount = auth()->user()->postedJobs()->where('status', 'draft')->count();
+        @endphp
+        @if ($jobCount === 0)
+            <p style="font-size:.875rem;color:var(--ink-2);margin:0 0 1rem">
+                Post a job, fund its budget into escrow, and freelancers can apply.
+                Nothing is public until the money is held.
+            </p>
+            <a class="btn" href="{{ route('jobs.manage.create') }}">Post a job</a>
+        @else
+            <p style="font-size:.875rem;color:var(--ink-2);margin:0 0 1rem">
+                {{ $jobCount }} job{{ $jobCount === 1 ? '' : 's' }}
+                @if ($draftCount > 0)
+                    · {{ $draftCount }} still in draft and not visible to anyone
+                @endif
+            </p>
+            <div class="actions" style="justify-content:flex-start">
+                <a class="btn btn-secondary" href="{{ route('jobs.manage.index') }}">Manage jobs</a>
+                <a class="btn" href="{{ route('jobs.manage.create') }}">Post a job</a>
+            </div>
+        @endif
 
     @else
         <h2 style="font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .6rem">Your work</h2>

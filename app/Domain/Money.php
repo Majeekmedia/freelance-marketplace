@@ -275,6 +275,65 @@ final readonly class Money implements \JsonSerializable, \Stringable
         return $total;
     }
 
+    /**
+     * Convert to another currency using a decimal rate string.
+     *
+     * Entirely integer arithmetic. A rate like "0.92345678" is parsed into a
+     * numerator over a power of ten, the product is formed in integer space,
+     * and a single half-up rounding step brings it back to minor units.
+     *
+     * `(int) round($cents * (float) $rate)` would be shorter and is wrong:
+     * binary floating point cannot represent 0.1 exactly, so a large amount can
+     * land a cent away from the true value, and that cent is then conspicuous
+     * in a reconciliation report nobody can explain.
+     */
+    public function convert(string $rate, Currency $target): self
+    {
+        if ($this->currency === $target) {
+            return $this;
+        }
+
+        $rate = trim($rate);
+
+        // Eight decimal places is the precision the schema stores
+        // (`decimal(18,8)`). Allowing more here would make the in-memory value
+        // disagree with what the database can hold, which is a silent
+        // inconsistency rather than a helpful extra digit.
+        if (! preg_match('/^\d+(\.\d{1,8})?$/', $rate)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid exchange rate "%s". Expected a non-negative decimal with at most 8 places.',
+                $rate
+            ));
+        }
+
+        [$whole, $fraction] = array_pad(explode('.', $rate), 2, '');
+        $scale = 10 ** strlen($fraction);
+        $numerator = (int) $whole * $scale + (int) str_pad($fraction, strlen($fraction), '0');
+
+        if ($numerator <= 0) {
+            throw new InvalidArgumentException('Exchange rate must be greater than zero.');
+        }
+
+        // Refuse rather than silently degrade.
+        //
+        // If minorUnits * numerator exceeds PHP_INT_MAX, PHP quietly promotes
+        // the result to a float and the precision this class exists to protect
+        // is gone — with no error to notice. Checking the division first keeps
+        // the failure loud and specific.
+        if ($this->minorUnits > intdiv(PHP_INT_MAX - intdiv($scale, 2), $numerator)) {
+            throw new InvalidArgumentException(sprintf(
+                'Converting %d minor units at rate %s overflows 64-bit integer range.',
+                $this->minorUnits,
+                $rate
+            ));
+        }
+
+        // Half-up rounding: add half the divisor before the integer division.
+        $converted = intdiv(($this->minorUnits * $numerator) + intdiv($scale, 2), $scale);
+
+        return new self($converted, $target);
+    }
+
     // --------------------------------------------------------------- display
 
     /** Canonical decimal string, e.g. "1234.05". Never for arithmetic. */

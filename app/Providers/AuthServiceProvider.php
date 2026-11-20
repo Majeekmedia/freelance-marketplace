@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Job;
 use App\Models\Portfolio;
 use App\Models\User;
 use App\Policies\FreelancerProfilePolicy;
+use App\Policies\JobPolicy;
 use App\Policies\PortfolioPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -23,5 +25,6 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => FreelancerProfilePolicy::class,
         Portfolio::class => PortfolioPolicy::class,
+        Job::class => JobPolicy::class,
     ];
 }

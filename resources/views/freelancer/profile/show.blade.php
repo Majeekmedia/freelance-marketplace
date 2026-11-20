@@ -3,7 +3,12 @@
 @section('title', $freelancer->name)
 
 @section('content')
-<div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;align-items:start">
+{{--
+    `split` collapses to one column below 860px. The previous inline
+    `grid-template-columns: 2fr 1fr` could not reflow, so at 375px the aside kept
+    its share and the page overflowed horizontally.
+--}}
+<div class="split" style="gap:2rem">
     <div>
         <h1>{{ $freelancer->name }}</h1>
         @if (! empty($public['headline']))
@@ -64,11 +69,14 @@
                     @endforeach
                 </div>
             @endif
-        </div>
 
-        <p style="font-size:.78rem;color:var(--ink-3);margin-top:.9rem;line-height:1.5">
-            Contact details are exchanged after a job is funded and a conversation is opened.
-        </p>
+            {{-- On a phone the aside sits under the bio, where a stranded note
+                 reads oddly; moving it inside the card keeps it attached to the
+                 facts it qualifies. --}}
+            <p style="font-size:.78rem;color:var(--ink-3);margin:1rem 0 0;line-height:1.5;border-top:1px solid var(--rule);padding-top:.8rem">
+                Contact details are exchanged after a job is funded and a conversation is opened.
+            </p>
+        </div>
     </aside>
 </div>
 @endsection
