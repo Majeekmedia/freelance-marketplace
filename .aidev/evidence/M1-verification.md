@@ -8,7 +8,7 @@
 ## Tally
 
 ```
-passed: 30 · failed: 0 · blocked: 2
+passed: 33 · failed: 0 · blocked: 0
 ```
 
 ## Results
@@ -45,13 +45,41 @@ passed: 30 · failed: 0 · blocked: 2
 | 28 | **Menu closes after tapping a link** | browser | closed | closed | passed |
 | 29 | **No overflow with menu open at 320px** | browser | none | none; menu right edge within viewport | passed |
 | 30 | **Menu links are ≥44px tap targets** | browser | all ≥44px | 49/49/49/49/49/50/50 | passed |
+| 31 | **Framework installs with no advisories** | CLI | `composer audit` clean | "No security vulnerability advisories found" | passed |
+| 32 | **Application reports its version** | CLI | Laravel 12.73.0 | `php artisan --version` → 12.73.0 | passed |
+| 33 | **Baseline test suite passes** | CLI | ≥1 passing | 2 passed (2 assertions) | passed |
 
 ## Blocked items
 
 | Test | Blocker | Owner | Impact |
 |---|---|---|---|
-| Laravel scaffold cannot install | `composer create-project laravel/laravel` selects **Laravel 13.11.0**, which requires PHP ≥ 8.3. Local XAMPP is **8.2.4**. Install also hit a Windows file lock on `vendor/composer/tmp-*`. | Developer | Blocks T-001 and therefore all server-side work. Two options: upgrade XAMPP to PHP 8.3, or pin `laravel/laravel:^11.0` (Laravel 11 supports PHP 8.2). Recommended: **pin Laravel 11** so local and host stay aligned at 8.2-compatible code. |
-| Local PHP 8.2.4 vs host PHP 8.3 | Version gap means 8.3-only syntax cannot be used locally. Already recorded in `steering/tech-stack.md` and `hosting-capability.md`. | Developer | Constrains syntax; does not block. Resolved by writing 8.2-compatible code. |
+| Laravel framework install | **resolved** — see below | Developer | was blocking T-001 and all server-side work |
+
+### Resolved during this milestone
+
+**Original blocker:** `composer create-project laravel/laravel` selected Laravel
+13.11.0 (requires PHP ≥ 8.3), and the first attempts hit a Windows file lock on
+`vendor/composer/tmp-*`.
+
+**Resolution, and a materially better decision than the original plan:**
+
+| Attempt | Version | PHP | Advisories |
+|---|---|---|---|
+| 1 | 13.11.0 | ≥8.3 | n/a — discarded |
+| 2 | 11.57.1 | ^8.2 | **5 advisories** (all affect `<12.71.0`) |
+| **3 (final)** | **12.73.0** | **^8.2** | **0** |
+
+The Laravel 11 pin was chosen to stay PHP 8.2-compatible. `composer audit` showed
+that Laravel 11 sits entirely inside the affected range of five advisories and is
+out of security support. **Laravel 12.73.0 carries the same `php ^8.2`
+constraint and has zero advisories** — so the compatibility argument for 11 was
+false, and the security argument against it was decisive.
+
+Also discovered: `php` on PATH is **Laravel Herd 8.3.30**, not XAMPP's 8.2.4.
+The host targets 8.3, so local and production now match exactly.
+
+**Verification:** `composer audit` → "No security vulnerability advisories found."
+`php artisan --version` → Laravel Framework 12.73.0. `php artisan test` → 2 passed.
 
 ## What this milestone actually proves — and what it does not
 
