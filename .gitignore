@@ -8,15 +8,49 @@ vendor/
 !.env.example
 *.pem
 *.key
+*.p12
+*.pfx
 
 # build output
 dist/
 build/
 .next/
 .output/
+/public/build
+/public/hot
+/public/storage
+
+# Laravel runtime
+/bootstrap/cache/*.php
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing/*
+
+# uploaded files — user data, never in git
+/storage/app/private
+/storage/app/public/portfolio
+/storage/app/public/brand
+
+# HARD RULE: KYC documents and deposit proofs must never enter git.
+# They are identity documents and financial evidence.
+/storage/app/private/kyc/
+/storage/app/private/deposits/
 
 # local agent scratch (keep evidence, ignore run cache)
 .aidev/cache/
+
+# test artefacts (regenerate, don't commit)
+/test-results
+/playwright-report
+/.phpunit.result.cache
+
+# database dumps — contain real customer data
+*.sql
+*.sqlite
+*.dump
 
 # OS
 .DS_Store
