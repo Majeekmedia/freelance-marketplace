@@ -249,6 +249,36 @@
 - **Evidence:**
 - **Risk:** medium
 
+### T-018b — SMTP configuration and mail:test command
+
+- **Status:** todo
+- **Milestone:** M6
+- **Requirements:** FR-042, FR-043
+- **Files:** `.env.example` mail block, `config/mail.php` review,
+  `app/Console/Commands/MailTestCommand.php`, config-cache note in deployment docs
+- **Depends:** T-018
+- **Verify:** `php artisan mail:test you@example.com` sends a real message and
+  prints the SMTP response on failure; a missing host fails with a clear message
+  rather than silently dropping mail; **no mail credential appears in any
+  database table** (grep migrations for smtp), in any route, or in any view;
+  `php artisan config:cache` picks up changed values after a cache clear
+- **Evidence:**
+- **Risk:** medium — misconfiguration silently drops mail, so the command must
+  fail loudly
+
+### T-018c — Transactional email templates
+
+- **Status:** todo
+- **Milestone:** M6
+- **Requirements:** FR-016, FR-035
+- **Files:** mailables + Blade mail views
+- **Depends:** T-018b
+- **Verify:** each of these renders with the current brand name and logo, and no
+  mail view contains a hardcoded brand: welcome, password reset, account
+  approved, deposit approved, deposit rejected, withdrawal paid, escrow released
+- **Evidence:**
+- **Risk:** medium
+
 ### T-019 — Milestone delivery and acceptance
 
 - **Status:** todo

@@ -523,12 +523,71 @@ it('reconciles every balance to the ledger', function () {
 | Service | Purpose | Trust model | Failure behaviour |
 |---|---|---|---|
 | SMTP provider | queued transactional email | credentials in `.env`; never logged | job retries with backoff; user action still succeeds |
+| SMTP provider (admin-configured) | queued transactional email | credentials encrypted at rest; never returned to the browser | job retries; user action still succeeds |
 | FX rate feed | display conversion only | HTTPS, cached daily in `settings` + `fx_rates` cache | on failure use last-known rate; **never block a page render**; never write a rate into the ledger retroactively |
 | Queue | email dispatch | database driver (shared host) | cron drains with `--stop-when-empty` |
 
 **Not integrated in release 1:** card processing, payout rails, KYC vendor —
 escrow and payouts are admin-attested wallet operations and **the UI must label
 them as simulated** (requirements, "Explicitly not integrated").
+
+### Email: SMTP over TLS, credentials in the environment
+
+Settings live in `.env` and are read through `config/mail.php`. No credentials
+touch the database, and no admin route can change them.
+
+```
+Mail::to($user)->queue(new WelcomeMail(...))
+        │
+        ▼
+   Laravel queue (database driver, drained by cron)
+        │
+        ▼
+   Symfony Mailer SMTP transport
+        │
+        ▼
+   SMTP server  (587 STARTTLS, or 465 implicit TLS)
+```
+
+Required environment keys:
+
+```
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.provider.com
+MAIL_PORT=587
+MAIL_ENCRYPTION=tls          # tls (587) | ssl (465) | null
+MAIL_USERNAME=...
+MAIL_PASSWORD=...
+MAIL_FROM_ADDRESS=hello@your-domain.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+Verification lives in one command rather than a dashboard form:
+
+```
+php artisan mail:test you@example.com
+```
+
+It sends a real message through the configured transport and prints the SMTP
+response on failure. This gives the same "prove it works before relying on it"
+benefit as a test-email button, without a web surface that can be repointed.
+
+**Rejected: PHPMailer directly.** Laravel 12 uses Symfony Mailer. Adding
+PHPMailer means either a custom transport or bypassing `Mail::queue()` — and
+bypassing the queue sends mail inside the user's request, which on shared hosting
+turns a slow SMTP server into a 30-second registration and a timeout. Symfony
+Mailer's SMTP transport already provides STARTTLS, implicit TLS and SMTP error
+reporting, so PHPMailer would add a dependency without adding a capability.
+
+**Rejected: admin-editable SMTP settings in the database.** It was requested for
+convenience, then reconsidered and correctly rejected. Storing mail credentials
+in the database means a compromised admin account can point the mailer at a
+server it controls and read every password-reset email the platform sends —
+`admin account → every account`. Requiring deploy access to change mail settings
+is a feature, not an inconvenience.
+
+Transport failures log the SMTP response code and message. The password is never
+written to a log line, an exception message, or a rendered page.
 
 ---
 
