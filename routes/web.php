@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,5 +59,32 @@ Route::middleware('guest')->group(function (): void {
 
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
-    Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Admin
+|--------------------------------------------------------------------------
+| Both gates:
+|   `admin`   → requires the admin type (404 otherwise, so the area is not
+|               confirmed to accounts that have no business knowing)
+|   `account` → requires an approved status; an admin is created approved, so
+|               this is defence in depth rather than the primary control
+*/
+
+Route::middleware(['auth', 'admin', 'account'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::redirect('/', '/admin/users')->name('home');
+
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+
+        Route::post('/users/{user}/approve', [AdminUserController::class, 'approve'])->name('users.approve');
+        Route::post('/users/{user}/reject', [AdminUserController::class, 'reject'])->name('users.reject');
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
+        Route::post('/users/{user}/reinstate', [AdminUserController::class, 'reinstate'])->name('users.reinstate');
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+    });
