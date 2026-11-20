@@ -609,6 +609,9 @@
     </nav>
 @endauth
 
+{{-- Page-specific scripts. Placed last so the DOM exists when they run. --}}
+@stack('scripts')
+
 <script>
 /*
  * Header menus.
