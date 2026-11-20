@@ -12,6 +12,7 @@ use App\Http\Controllers\JobManageController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicDirectoryController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,6 +66,12 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    /*
+     * Wallet. Deliberately has no {user} segment: the wallet shown is always
+     * the signed-in user's, so there is no id to tamper with (FR-018).
+     */
+    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
 });
 
 /*

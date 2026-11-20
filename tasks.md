@@ -131,14 +131,15 @@
 
 ### T-011 — Wallet and ledger (immutable, derived balance)
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M4
-- **Requirements:** FR-029, FR-018, FR-041
-- **Files:** `wallets`, `ledger_entries` migrations, `LedgerService`, `WalletService`, `WalletController`
-- **Depends:** T-002, T-003
-- **Verify:** appending credits and debits yields a derived balance equal to the sum; **no table has a `balance` column** (`grep -rn "balance" database/migrations` shows none); no endpoint can update or delete a ledger row; a user cannot read another user's wallet; reconciliation test passes after a random sequence of movements
-- **Evidence:**
+- **Requirements:** FR-029, FR-018, FR-041, FR-030
+- **Files:** `wallets`, `ledger_entries` migrations, `LedgerService`, `LedgerEntry`, `Wallet`, `LedgerKind`, `LedgerDirection`, `WalletController`, wallet view
+- **Depends:** T-002, T-003 (done)
+- **Verify:** appending credits and debits yields a derived balance equal to the sum; **no table has a `balance` column**; no endpoint can update or delete a ledger row; a user cannot read another user's wallet; reconciliation test passes after a random sequence of movements
+- **Evidence:** `.aidev/evidence/M4-T011-wallet.md` — passed 32 · failed 0 · blocked 0; suite 284 passed
 - **Risk:** **high — money**
+- **Notes:** balance guard proven both ways by injecting `balance_cents` into the wallets migration — both schema and migration-source guards failed and named the exact file and column. SQLite needs triggers rather than `ALTER TABLE ADD CONSTRAINT CHECK`.
 
 ### T-011b — Admin payment methods (bank + crypto, enable/disable)
 

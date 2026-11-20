@@ -443,6 +443,11 @@
                             Dashboard
                         </a>
 
+                        <a href="{{ route('wallet.show') }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19"/><circle cx="17" cy="14.5" r="1.2"/></svg>
+                            Wallet
+                        </a>
+
                         @if($navUser->isFreelancer())
                             <a href="{{ route('profile.edit') }}">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>
@@ -564,6 +569,12 @@
            @if (request()->routeIs('jobs.*')) aria-current="page" @endif>
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12h18"/></svg>
             <span>Jobs</span>
+        </a>
+
+        <a href="{{ route('wallet.show') }}" class="{{ $isActive('wallet.*') }}"
+           @if (request()->routeIs('wallet.*')) aria-current="page" @endif>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19"/><circle cx="17" cy="14.5" r="1.2"/></svg>
+            <span>Wallet</span>
         </a>
 
         @if ($navRole === 'poster')

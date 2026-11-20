@@ -111,6 +111,22 @@ class User extends Authenticatable
         return $this->hasMany(Job::class, 'poster_id')->latest();
     }
 
+    /** The wallet holding this user's money identity (FR-041). */
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Every movement of this user's money, oldest first.
+     *
+     * A balance is never stored — it is the sum of these rows (FR-041).
+     */
+    public function ledgerEntries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LedgerEntry::class);
+    }
+
     // ---------------------------------------------------------------- scopes
 
     /** @param  Builder<User>  $query */
