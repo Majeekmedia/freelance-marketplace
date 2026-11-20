@@ -1,0 +1,14 @@
+{
+  "project": "Trust-Prime",
+  "slug": "freelance-marketplace",
+  "profile": "laravel-blade",
+  "profileLabel": "Laravel + Blade + Tailwind (shared cPanel / VPS)",
+  "kitVersion": "1.0.0",
+  "createdAt": "2026-11-20T11:26:17.346Z",
+  "commands": {
+    "test": "php artisan test",
+    "build": "npm run build",
+    "lint": "vendor/bin/pint --test",
+    "e2e": "npx playwright test"
+  }
+}

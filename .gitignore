@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+vendor/
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# build output
+dist/
+build/
+.next/
+.output/
+
+# local agent scratch (keep evidence, ignore run cache)
+.aidev/cache/
+
+# OS
+.DS_Store
+Thumbs.db
