@@ -98,3 +98,55 @@ Fix:      recorded here and promoted to a requirements question (Q2/Q3). Propose
           kit change: add a `custody` flag to G7 requiring an explicit
           merchant-of-record decision when requirements mention wallets/balances.
 Measure:  G7 fails a wallet-based project with no recorded custody decision.
+
+### 2026-11-20 · Laravel 11 is a security liability, not a safe pin
+Type:     false-negative (critical)
+Area:     steering/tech-stack.md / hosting-capability.md / T-001
+Observed: The plan pinned Laravel 11 to stay PHP 8.2-compatible. composer audit
+          reported 5 advisories against laravel/framework, all with an affected
+          range of <12.71.0. Laravel 11.57.1 sits entirely inside that range and
+          is out of security support.
+Cost:     would have shipped a framework with known CVEs. One (signed-URL path
+          confusion, medium) is directly relevant: this app will use signed URLs.
+Fix:      Re-pinned to Laravel 12.73.0 — requires php ^8.2 (same constraint) and
+          reports 0 advisories. Requirements, design, tech-stack and hosting
+          capability all updated.
+Measure:  composer audit returns "No security vulnerability advisories found."
+Generalisation: "pin an older major for compatibility" silently trades security
+          for convenience. Compatibility is answered by the package require block;
+          security by composer audit. Both are one command.
+
+### 2026-11-20 · Local PHP was misidentified
+Type:     false-positive
+Area:     hosting-capability.md
+Observed: The sheet recorded local PHP as 8.2.4 from XAMPP and treated 8.3 syntax
+          as unavailable. In fact php on PATH is Laravel Herd 8.3.30 — matching
+          the host target exactly. XAMPP 8.2.4 was only one of two runtimes.
+Cost:     drove a wrong framework choice for a while.
+Fix:      Both runtimes recorded explicitly; Laravel 12 (php ^8.2) satisfies both.
+Measure:  php -v on PATH and C:\xampp\php\php.exe -v both recorded.
+
+### 2026-11-20 · Laravel scaffold overwrote the hardened .gitignore
+Type:     false-negative
+Area:     .gitignore
+Observed: composer create-project writes its own .gitignore, replacing the project
+          one and silently removing the KYC and deposit-proof exclusions added an
+          hour earlier.
+Cost:     identity-document and financial-evidence paths became committable.
+Fix:      Restored as a clearly marked "Project additions" block after the Laravel
+          block, so a future diff makes the removal obvious.
+Measure:  git check-ignore -v .env passes; .gitignore contains "HARD RULE".
+Generalisation: any scaffolder that writes dotfiles clobbers project policy files.
+          Re-check .gitignore after every scaffold, and verify with
+          git check-ignore rather than by reading.
+
+### 2026-11-20 · Composer create-project fails on Windows with a path lock
+Type:     friction
+Area:     toolchain
+Observed: Two attempts failed with "Could not delete ...vendor\composer\tmp-*",
+          "can be due to an antivirus or the Windows Search Indexer".
+Cost:     ~15 minutes and two wasted installs.
+Fix:      Install to a directory outside the project, then copy the result in,
+          excluding .git. Also removed a stray Dev_workspace\vendor left by the
+          first failed attempt.
+Measure:  third attempt completed at 112/112.

@@ -1,4 +1,4 @@
----
+﻿---
 status: approved
 approved_by: Project Owner
 approved_at: 2026-11-20
@@ -9,10 +9,10 @@ revision: 4
 revised_at: 2026-11-20
 ---
 
-# Requirements — Trust-Prime
+# Requirements â€” Trust-Prime
 
 > **Source of truth.** Every design decision and task traces back here.
-> A human approves this file — an agent never fills `approved_by`.
+> A human approves this file â€” an agent never fills `approved_by`.
 
 **Purpose of this project:** a production-grade demonstration build. There is no
 external client, so commercial and regulatory constraints are deliberately
@@ -28,8 +28,8 @@ companies) publish job listings with the money funded into escrow *before* the
 job goes live. One-off jobs are funded in full at posting; larger jobs can be
 split into **milestones**, each with its own slice of the escrowed budget.
 Freelancers browse publicly, create a profile with a portfolio, apply to jobs,
-and get hired. The admin acts as the escrow holder and releases funds — per
-milestone or in full — manually. Users can review and rate one another, and the
+and get hired. The admin acts as the escrow holder and releases funds â€” per
+milestone or in full â€” manually. Users can review and rate one another, and the
 admin moderates those reviews. Communication happens in-app.
 
 **Problem:** freelancers waste time on unpaid work and fake listings; posters
@@ -38,7 +38,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
 **Success measure:**
 
 1. A poster can fund escrow, publish a job, and hire a freelancer, and the
-   freelancer's wallet balance increases — with every step visible in an audit
+   freelancer's wallet balance increases â€” with every step visible in an audit
    trail that reconciles to the cent.
 2. A freelancer can apply, message, be hired, deliver against a milestone, get
    paid for it, and request a withdrawal without leaving the app.
@@ -82,7 +82,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
 - Queued email for key events
 - Wallet ledger with immutable entries
 - KYC document upload before first withdrawal
-- Roles: freelancer, poster, admin — chosen at signup, not switchable
+- Roles: freelancer, poster, admin â€” chosen at signup, not switchable
 - Display-currency switcher for a fixed whitelist (USD, EUR, GBP, CAD).
   **NGN is not supported anywhere in the application.**
 
@@ -91,7 +91,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
 - Real payment processing: escrow funding and payouts are **simulated** through
   admin-actioned wallet credits. No card is charged, no bank is debited.
 - Automated payout API integration (withdrawals are approved and marked paid by admin)
-- **NGN as a wallet currency, a job pricing currency, or a display currency** —
+- **NGN as a wallet currency, a job pricing currency, or a display currency** â€”
   excluded from the entire application, including seeds, fixtures and copy
 - Dispute/arbitration workflow
 - Real-time chat, typing indicators, presence
@@ -126,7 +126,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
 
 ## Functional requirements
 
-### FR-001 — Public job browsing
+### FR-001 â€” Public job browsing
 
 - **Role:** Visitor
 - **Behaviour:** The landing page lists all jobs with status `published` and
@@ -137,7 +137,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   returns 404.
 - **Priority:** must-have
 
-### FR-002 — Search and filter jobs
+### FR-002 â€” Search and filter jobs
 
 - **Role:** Visitor
 - **Behaviour:** Visitors can filter by category, budget range, and free-text
@@ -147,7 +147,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   does not return jobs whose text lacks the term.
 - **Priority:** must-have
 
-### FR-003 — Registration with account type
+### FR-003 â€” Registration with account type
 
 - **Role:** Visitor
 - **Behaviour:** A visitor registers as either freelancer or poster. The account
@@ -157,7 +157,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   ignored and the account is not created as admin.
 - **Priority:** must-have
 
-### FR-004 — Account approval gates actions
+### FR-004 â€” Account approval gates actions
 
 - **Role:** System / Admin
 - **Behaviour:** A `pending` account can log in, browse, and edit its own
@@ -168,7 +168,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   After admin approval the same action succeeds.
 - **Priority:** must-have
 
-### FR-005 — Authentication and session security
+### FR-005 â€” Authentication and session security
 
 - **Role:** All
 - **Behaviour:** Login, logout, and password reset with expiring one-time tokens.
@@ -178,7 +178,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   rejected; a suspended account cannot log in.
 - **Priority:** must-have
 
-### FR-006 — Brute-force resistance
+### FR-006 â€” Brute-force resistance
 
 - **Role:** All
 - **Behaviour:** Login, registration, and password-reset endpoints are rate
@@ -188,7 +188,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   the window; the response never reveals whether an email exists.
 - **Priority:** must-have
 
-### FR-007 — Freelancer profile
+### FR-007 â€” Freelancer profile
 
 - **Role:** Freelancer
 - **Behaviour:** Freelancer maintains headline, bio, skills, hourly rate, and
@@ -197,7 +197,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   page; the public page never exposes email, phone, or wallet balance.
 - **Priority:** must-have
 
-### FR-008 — Portfolio items
+### FR-008 â€” Portfolio items
 
 - **Role:** Freelancer
 - **Behaviour:** Freelancer adds portfolio entries (title, description, external
@@ -206,17 +206,17 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   reflects the change; freelancer A cannot modify freelancer B's portfolio entry.
 - **Priority:** must-have
 
-### FR-009 — Job creation with mandatory escrow funding
+### FR-009 â€” Job creation with mandatory escrow funding
 
 - **Role:** Poster (approved)
 - **Behaviour:** A poster creates a job (title, description, category, budget,
   deadline) and must fund escrow for the **full** budget before the job becomes
   publicly visible. Funding debits the poster's wallet into an escrow hold.
-- **Acceptance:** A job whose escrow is not funded has `status ≠ published`,
+- **Acceptance:** A job whose escrow is not funded has `status â‰  published`,
   appears in no public listing, and returns 404 publicly. Funding moves exactly
   the budget amount out of the poster's available balance into an escrow balance.
 - **Priority:** must-have
-### FR-010 — Escrow funding is atomic
+### FR-010 â€” Escrow funding is atomic
 
 - **Role:** System
 - **Behaviour:** Funding a job requires sufficient available balance. The debit of
@@ -227,7 +227,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   clear insufficient-funds error.
 - **Priority:** must-have
 
-### FR-011 — Public escrow badge
+### FR-011 â€” Public escrow badge
 
 - **Role:** Visitor
 - **Behaviour:** A published job visibly shows that its budget is held in escrow.
@@ -236,16 +236,16 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   a public endpoint contains the poster's balance, ledger rows, or email address.
 - **Priority:** must-have
 
-### FR-012 — Apply to a job
+### FR-012 â€” Apply to a job
 
 - **Role:** Freelancer (approved)
 - **Behaviour:** A freelancer submits one application per job with a cover note
   and proposed amount. Duplicate applications to the same job are rejected.
 - **Acceptance:** A second application to the same job by the same freelancer is
-  rejected; a freelancer cannot apply to a job with `status ≠ published`.
+  rejected; a freelancer cannot apply to a job with `status â‰  published`.
 - **Priority:** must-have
 
-### FR-013 — Poster reviews applicants and hires
+### FR-013 â€” Poster reviews applicants and hires
 
 - **Role:** Poster (approved)
 - **Behaviour:** Poster views applications to their own jobs and marks one as
@@ -256,7 +256,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   all other applications are `declined`.
 - **Priority:** must-have
 
-### FR-014 — In-app messaging per application
+### FR-014 â€” In-app messaging per application
 
 - **Role:** Poster + Freelancer
 - **Behaviour:** Each application has a message thread visible only to the two
@@ -266,7 +266,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   decrements when the thread is opened.
 - **Priority:** must-have
 
-### FR-015 — In-app notifications
+### FR-015 â€” In-app notifications
 
 - **Role:** All
 - **Behaviour:** Users receive notifications for new applications, hiring, new
@@ -275,7 +275,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   correct recipient and none for the actor; opening the notification marks it read.
 - **Priority:** must-have
 
-### FR-016 — Queued email for key events
+### FR-016 â€” Queued email for key events
 
 - **Role:** System
 - **Behaviour:** Key events (account approved, hired, message received, escrow
@@ -284,7 +284,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   the mail transport fails, the job is retried and does not block the user action.
 - **Priority:** must-have
 
-### FR-017 — Work delivery and acceptance (per milestone)
+### FR-017 â€” Work delivery and acceptance (per milestone)
 
 - **Role:** Freelancer then Poster
 - **Behaviour:** The hired freelancer marks a specific **milestone** `delivered`
@@ -297,7 +297,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   money (release is admin's action, per FR-032).
 - **Priority:** must-have
 
-### FR-018 — Freelancer wallet balance
+### FR-018 â€” Freelancer wallet balance
 
 - **Role:** Freelancer
 - **Behaviour:** Freelancer sees available balance, pending (escrow earmarked on
@@ -306,7 +306,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   ledger rows; a freelancer cannot see another user's wallet by changing an id.
 - **Priority:** must-have
 
-### FR-019 — Withdrawal request
+### FR-019 â€” Withdrawal request
 
 - **Role:** Freelancer (approved, KYC complete)
 - **Behaviour:** A freelancer requests a withdrawal up to the available balance
@@ -317,7 +317,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   withdrawal request without completed KYC is rejected.
 - **Priority:** must-have
 
-### FR-020 — KYC document upload
+### FR-020 â€” KYC document upload
 
 - **Role:** Freelancer
 - **Behaviour:** A freelancer uploads an identity document; admin approves or
@@ -326,7 +326,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   is only readable by the owner and admin, never by another user or publicly.
 - **Priority:** must-have
 
-### FR-021 — Admin escrow release (full or per milestone)
+### FR-021 â€” Admin escrow release (full or per milestone)
 
 - **Role:** Admin
 - **Behaviour:** Admin releases escrow to the hired freelancer, either for a single
@@ -339,7 +339,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   that is not `accepted` is rejected.
 - **Priority:** must-have
 
-### FR-022 — Admin wallet adjustment
+### FR-022 â€” Admin wallet adjustment
 
 - **Role:** Admin
 - **Behaviour:** Admin can credit or debit any user's wallet, and fund a poster's
@@ -348,7 +348,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   row cannot be edited or deleted afterwards; the audit log records who did it and when.
 - **Priority:** must-have
 
-### FR-023 — Admin payout processing
+### FR-023 â€” Admin payout processing
 
 - **Role:** Admin
 - **Behaviour:** Admin reviews `pending` withdrawals and marks each `paid` or
@@ -357,7 +357,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   restores exactly the held amount; every transition is audited.
 - **Priority:** must-have
 
-### FR-024 — Admin account management
+### FR-024 â€” Admin account management
 
 - **Role:** Admin
 - **Behaviour:** Admin views, approves, rejects, suspends and soft-deletes
@@ -367,7 +367,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   clear message.
 - **Priority:** must-have
 
-### FR-025 — Admin job management
+### FR-025 â€” Admin job management
 
 - **Role:** Admin
 - **Behaviour:** Admin views all jobs regardless of status, and can archive,
@@ -377,7 +377,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   refund path rather than silently stranding funds.
 - **Priority:** must-have
 
-### FR-026 — Escrow refund
+### FR-026 â€” Escrow refund
 
 - **Role:** Admin
 - **Behaviour:** Admin refunds **unreleased** escrow to the poster's wallet with a
@@ -390,7 +390,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   milestones untouched and zeroes the remainder; double refund is rejected.
 - **Priority:** must-have
 
-### FR-027 — CMS site settings
+### FR-027 â€” CMS site settings
 
 - **Role:** Admin
 - **Behaviour:** Admin edits site name, contact email, contact phone, and other
@@ -400,7 +400,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   emails; no template hard-codes contact details; an invalid email or phone is rejected.
 - **Priority:** must-have
 
-### FR-028 — Admin audit log
+### FR-028 â€” Admin audit log
 
 - **Role:** Admin
 - **Behaviour:** Every admin action that moves money, changes an account status,
@@ -409,7 +409,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   one audit row; audit rows cannot be updated or deleted through the app.
 - **Priority:** must-have
 
-### FR-029 — Immutable wallet ledger
+### FR-029 â€” Immutable wallet ledger
 
 - **Role:** System
 - **Behaviour:** Every balance change is a ledger row (user, type, direction,
@@ -420,7 +420,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   deletes a ledger row.
 - **Priority:** must-have
 
-### FR-030 — Money precision
+### FR-030 â€” Money precision
 
 - **Role:** System
 - **Behaviour:** All money is stored and computed as integer minor units (cents).
@@ -431,7 +431,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   as a stored ledger amount.
 - **Priority:** must-have
 
-### FR-031 — Admin dashboard reporting
+### FR-031 â€” Admin dashboard reporting
 
 - **Role:** Admin
 - **Behaviour:** Dashboard shows counts and totals: users by type and status, jobs
@@ -440,7 +440,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   figure reconciles with the ledger at all times.
 - **Priority:** must-have
 
-### FR-032 — Milestone-based job payments
+### FR-032 â€” Milestone-based job payments
 
 - **Role:** Poster, Freelancer, Admin
 - **Behaviour:** Instead of one amount, a job may define ordered milestones, each
@@ -458,14 +458,14 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   a one-milestone job in every test.
 - **Priority:** must-have
 
-### FR-033 — Reviews and ratings (open, testimonial-style)
+### FR-033 â€” Reviews and ratings (open, testimonial-style)
 
 - **Role:** Any signed-in user
-- **Behaviour:** A review is a 1–5 star rating plus a written comment attached to a
+- **Behaviour:** A review is a 1â€“5 star rating plus a written comment attached to a
   **freelancer profile**. **No job relationship is required**: any signed-in user
   may review any freelancer, whether or not they have ever worked together. The
   reviewer's **display name is free text** and does not have to match their account
-  name — a reviewer may present themselves as a company or any name they choose.
+  name â€” a reviewer may present themselves as a company or any name they choose.
   A signed-in reviewer holds one active review per freelancer; submitting again
   updates it. Reviews publish **immediately**, with no approval step.
 - **Acceptance:** (a) A signed-in user with no prior relationship to a freelancer
@@ -477,7 +477,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   cannot submit. (f) A guest who is not signed in cannot submit.
 - **Priority:** must-have
 
-### FR-034 — Admin review authoring and moderation
+### FR-034 â€” Admin review authoring and moderation
 
 - **Role:** Admin
 - **Behaviour:** Admin can **author a review with no linked user account**,
@@ -497,7 +497,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   reconstructable from the audit trail.
 - **Priority:** must-have
 
-### FR-035 — Site branding: name and logo
+### FR-035 â€” Site branding: name and logo
 
 - **Role:** Admin
 - **Behaviour:** Admin can change the site name and upload a logo image. Both are
@@ -511,7 +511,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   (d) No template hard-codes the brand name.
 - **Priority:** must-have
 
-### FR-036 — Currency whitelist with NGN excluded
+### FR-036 â€” Currency whitelist with NGN excluded
 
 - **Role:** System, Visitor
 - **Behaviour:** A fixed whitelist of supported display currencies (USD as base,
@@ -526,7 +526,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   or job budget.
 - **Priority:** must-have
 
-### FR-037 — Review abuse resistance
+### FR-037 â€” Review abuse resistance
 
 - **Role:** System / Admin
 - **Behaviour:** Because reviews publish immediately and need no job relationship,
@@ -540,7 +540,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   review does not hide it automatically.
 - **Priority:** must-have
 
-### FR-038 — Admin payment method management
+### FR-038 â€” Admin payment method management
 
 - **Role:** Admin
 - **Behaviour:** Admin maintains a list of payment methods that posters can use to
@@ -558,7 +558,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   it so history is preserved.
 - **Priority:** must-have
 
-### FR-039 — Poster deposit request with proof
+### FR-039 â€” Poster deposit request with proof
 
 - **Role:** Poster (approved)
 - **Behaviour:** A poster opens the funding page, sees only enabled payment
@@ -574,12 +574,12 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   (e) The proof file is readable only by the requester and admin.
 - **Priority:** must-have
 
-### FR-040 — Admin deposit approval credits the wallet
+### FR-040 â€” Admin deposit approval credits the wallet
 
 - **Role:** Admin
 - **Behaviour:** Admin reviews the deposit queue with the submitted proof and
-  either **approves** — choosing the exact amount to credit, which may differ from
-  the requested amount if fees were deducted — or **rejects** with a reason.
+  either **approves** â€” choosing the exact amount to credit, which may differ from
+  the requested amount if fees were deducted â€” or **rejects** with a reason.
   Approval writes one `deposit_credit` ledger row. Rejection writes nothing and
   requires a reason.
 - **Acceptance:** (a) Approving creates exactly one `deposit_credit` ledger row for
@@ -590,7 +590,7 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
   (e) A request cannot be approved after it has been rejected, or vice versa.
 - **Priority:** must-have
 
-### FR-041 — Wallet balance is derived, never stored
+### FR-041 â€” Wallet balance is derived, never stored
 
 - **Role:** System
 - **Behaviour:** There is **no mutable balance field anywhere in the system**. A
@@ -631,9 +631,9 @@ have no way to signal seriousness. Funding escrow at posting time solves both.
 ### Account states
 
 ```
-pending ──▶ approved ──▶ suspended
-   │            │             │
-   └──▶ rejected└─────────────┴──▶ (reinstated by admin)
+pending â”€â”€â–¶ approved â”€â”€â–¶ suspended
+   â”‚            â”‚             â”‚
+   â””â”€â”€â–¶ rejectedâ””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â–¶ (reinstated by admin)
 ```
 
 - `pending`: can log in, browse, edit own profile. Cannot act.
@@ -644,11 +644,11 @@ pending ──▶ approved ──▶ suspended
 ### Job lifecycle
 
 ```
-draft ──fund escrow──▶ published ──hire──▶ in_progress ──all milestones released──▶ completed
-  │                        │                                                          ▲
-  │                        └──(no applicants, admin refunds)──▶ refunded              │
-  └──(abandoned)                                                                       │
-                          milestone: pending ▶ delivered ▶ accepted ──admin release──┘
+draft â”€â”€fund escrowâ”€â”€â–¶ published â”€â”€hireâ”€â”€â–¶ in_progress â”€â”€all milestones releasedâ”€â”€â–¶ completed
+  â”‚                        â”‚                                                          â–²
+  â”‚                        â””â”€â”€(no applicants, admin refunds)â”€â”€â–¶ refunded              â”‚
+  â””â”€â”€(abandoned)                                                                       â”‚
+                          milestone: pending â–¶ delivered â–¶ accepted â”€â”€admin releaseâ”€â”€â”˜
 ```
 
 **Rules:**
@@ -665,9 +665,9 @@ draft ──fund escrow──▶ published ──hire──▶ in_progress ─�
 ### Milestone states
 
 ```
-pending ──freelancer delivers──▶ delivered ──poster accepts──▶ accepted ──admin release──▶ released
-   │
-   └──(job refunded before any release)──▶ refunded
+pending â”€â”€freelancer deliversâ”€â”€â–¶ delivered â”€â”€poster acceptsâ”€â”€â–¶ accepted â”€â”€admin releaseâ”€â”€â–¶ released
+   â”‚
+   â””â”€â”€(job refunded before any release)â”€â”€â–¶ refunded
 ```
 
 - Milestone amounts must sum exactly to the job budget.
@@ -678,8 +678,8 @@ pending ──freelancer delivers──▶ delivered ──poster accepts──�
 ### Escrow states
 
 ```
-unfunded ──▶ funded ──▶ released (to freelancer)
-                 └────▶ refunded (to poster)
+unfunded â”€â”€â–¶ funded â”€â”€â–¶ released (to freelancer)
+                 â””â”€â”€â”€â”€â–¶ refunded (to poster)
 ```
 
 - Escrow amount equals the job budget exactly.
@@ -710,8 +710,8 @@ unfunded ──▶ funded ──▶ released (to freelancer)
 ### Deposit lifecycle
 
 ```
-poster requests ──▶ pending ──admin approves(amount)──▶ credited
-                        └────admin rejects(reason)────▶ rejected
+poster requests â”€â”€â–¶ pending â”€â”€admin approves(amount)â”€â”€â–¶ credited
+                        â””â”€â”€â”€â”€admin rejects(reason)â”€â”€â”€â”€â–¶ rejected
 ```
 
 - A deposit request credits **nothing** until admin approves.
@@ -725,39 +725,39 @@ This is the whole flow the platform supports. Every arrow is a ledger row.
 
 ```
  1. Poster transfers money outside the app (bank or crypto)
-         │
-         ▼
- 2. POSTER submits deposit request + proof ──▶ pending   [no ledger row]
-         │
-         ▼
- 3. ADMIN approves, chooses amount ──▶ ledger: deposit_credit(+)
-         │
-         ▼
+         â”‚
+         â–¼
+ 2. POSTER submits deposit request + proof â”€â”€â–¶ pending   [no ledger row]
+         â”‚
+         â–¼
+ 3. ADMIN approves, chooses amount â”€â”€â–¶ ledger: deposit_credit(+)
+         â”‚
+         â–¼
     Poster wallet available = sum(credits) - sum(debits) - sum(holds)
-         │
-         ▼
- 4. POSTER funds a job ──▶ ledger: escrow_hold(−) + escrow row
-         │
-         ▼
- 5. FREELANCER delivers milestone ──▶ no ledger row (attestation)
- 6. POSTER accepts milestone     ──▶ no ledger row (attestation)
-         │
-         ▼
- 7. ADMIN releases milestone ──▶ ledger: escrow_release_credit(+) for freelancer
-         │
-         ▼
+         â”‚
+         â–¼
+ 4. POSTER funds a job â”€â”€â–¶ ledger: escrow_hold(âˆ’) + escrow row
+         â”‚
+         â–¼
+ 5. FREELANCER delivers milestone â”€â”€â–¶ no ledger row (attestation)
+ 6. POSTER accepts milestone     â”€â”€â–¶ no ledger row (attestation)
+         â”‚
+         â–¼
+ 7. ADMIN releases milestone â”€â”€â–¶ ledger: escrow_release_credit(+) for freelancer
+         â”‚
+         â–¼
     Freelancer wallet available increases
-         │
-         ▼
- 8. FREELANCER requests withdrawal ──▶ ledger: withdrawal_hold(−)
-         │
-         ▼
- 9. ADMIN pays outside the app, marks paid ──▶ ledger: withdrawal_paid(−)
+         â”‚
+         â–¼
+ 8. FREELANCER requests withdrawal â”€â”€â–¶ ledger: withdrawal_hold(âˆ’)
+         â”‚
+         â–¼
+ 9. ADMIN pays outside the app, marks paid â”€â”€â–¶ ledger: withdrawal_paid(âˆ’)
 ```
 
 **Why no balance column:** steps 3, 4, 7 and 8/9 each append a row. The balance is
 whatever those rows add up to. If a poster's balance looks wrong, you list the rows
-and the answer is there — you never have to guess what an overwrite did.
+and the answer is there â€” you never have to guess what an overwrite did.
 
 ### Payment method rules
 
@@ -778,10 +778,10 @@ and the answer is there — you never have to guess what an overwrite did.
 - **Admin-authored reviews have no linked user account**; they are attributed as
   posted by the platform and carry a free-text reviewer name.
 - One active review per account per freelancer; re-reviewing updates it. (An
-  anti-flood control — not a restriction on *who* may review.)
+  anti-flood control â€” not a restriction on *who* may review.)
 - Reviews publish **immediately**. There is no pre-publication approval queue.
 - A user cannot review their own account.
-- Ratings are integers 1–5. Comment length is bounded.
+- Ratings are integers 1â€“5. Comment length is bounded.
 - Moderation states: `visible`, `hidden`, `deleted`. Hidden and deleted reviews are
   excluded from public display and from the average.
 - Admin may author, edit, hide and delete; every action is audited with a reason.
@@ -790,8 +790,8 @@ and the answer is there — you never have to guess what an overwrite did.
 ### Withdrawal states
 
 ```
-requested ──▶ paid
-     └──────▶ rejected (funds returned to available)
+requested â”€â”€â–¶ paid
+     â””â”€â”€â”€â”€â”€â”€â–¶ rejected (funds returned to available)
 ```
 
 ### Money arithmetic rules
@@ -819,7 +819,7 @@ requested ──▶ paid
 
 | Entity | Purpose | Sensitive data |
 |---|---|---|
-| users | identity, type, status | yes — email, password hash |
+| users | identity, type, status | yes â€” email, password hash |
 | freelancer_profiles | headline, bio, skills, rate | public subset only |
 | portfolios | freelancer work samples | no |
 | company_profiles | poster company details | partial |
@@ -828,16 +828,16 @@ requested ──▶ paid
 | milestones | ordered payment slices per job | yes |
 | reviews | ratings and comments on freelancer profiles; `reviewer_user_id` is **nullable** so admin-authored reviews need no account | yes |
 | review_flags | abuse reports raised against a review | no |
-| applications | freelancer → job, with proposed amount | partial |
+| applications | freelancer â†’ job, with proposed amount | partial |
 | threads, messages | per-application conversation | yes |
 | notifications | per-user event log | no |
-| wallets | one row per user; holds currency metadata only — **no balance column** | no |
+| wallets | one row per user; holds currency metadata only â€” **no balance column** | no |
 | ledger_entries | immutable money movements | yes |
-| payment_methods | admin-managed bank/crypto funding routes | yes — payout addresses |
+| payment_methods | admin-managed bank/crypto funding routes | yes â€” payout addresses |
 | deposit_requests | poster funding requests with proof and approval state | yes |
 | escrows | hold per job | yes |
-| withdrawals | payout requests | yes — payout details |
-| kyc_documents | identity verification | yes — highest sensitivity |
+| withdrawals | payout requests | yes â€” payout details |
+| kyc_documents | identity verification | yes â€” highest sensitivity |
 | audit_logs | admin action trail | yes |
 | settings | CMS site copy | no |
 
@@ -857,11 +857,11 @@ operations, and the UI must label them as simulated.
 ## Deployment constraints
 
 - Runtime: **PHP 8.3** (verify on the host with `php -v`).
-- Framework: **Laravel 11** (confirm the compatible version on install).
-- Database: **MySQL 8 or MariaDB 10.6** — engine must be confirmed, they differ.
+- Framework: **Laravel 12** (confirm the compatible version on install).
+- Database: **MySQL 8 or MariaDB 10.6** â€” engine must be confirmed, they differ.
 - Web server: **Apache 2.4**, document root pointed at `public/`.
 - Hosting: **shared cPanel**.
-- Shell access: **restricted SSH** — assume no long-running processes.
+- Shell access: **restricted SSH** â€” assume no long-running processes.
 - Background jobs: **cron only**. No queue worker daemon; queue is drained by a
   scheduled `queue:work --stop-when-empty` tick.
 - Frontend build: **built locally with XAMPP/Node, compiled assets uploaded**.
@@ -879,101 +879,101 @@ operations, and the UI must label them as simulated.
 
 ## Acceptance criteria
 
-### AC-001 — A job cannot be seen publicly unless it is funded
+### AC-001 â€” A job cannot be seen publicly unless it is funded
 
 - **Given** a poster who created a job but has not funded escrow
 - **When** a visitor requests the landing page and the job's public URL
 - **Then** the job is absent from the listing and the URL returns 404
 
-### AC-002 — Funding escrow moves money exactly once
+### AC-002 â€” Funding escrow moves money exactly once
 
 - **Given** a poster with 500.00 available
 - **When** they fund a job with a 200.00 budget
 - **Then** available becomes 300.00, escrow holds 200.00, and retrying the same
   funding creates no second hold
 
-### AC-003 — Only admin releases escrow
+### AC-003 â€” Only admin releases escrow
 
 - **Given** a delivered job with filled escrow
 - **When** the poster or freelancer attempts to release it
 - **Then** the request is denied and no ledger row is created
 
-### AC-004 — Release credits the freelancer exactly once
+### AC-004 â€” Release credits the freelancer exactly once
 
 - **Given** a delivered and accepted milestone of 200.00 within a funded job
 - **When** admin releases that milestone
 - **Then** the freelancer's available increases by 200.00, that milestone is
   `released`, and a second release of the same milestone is rejected
 
-### AC-005 — Every balance reconciles to the ledger
+### AC-005 â€” Every balance reconciles to the ledger
 
 - **Given** any sequence of funding, release, refund, adjustment and withdrawal
 - **When** the balance is recomputed from ledger rows
 - **Then** it equals the displayed balance to the cent
 
-### AC-006 — Cross-user access is denied
+### AC-006 â€” Cross-user access is denied
 
 - **Given** freelancer A is signed in
 - **When** they request freelancer B's ledger, B's thread, or B's KYC document
 - **Then** access is denied and the response contains no private detail
 
-### AC-007 — Pending accounts cannot act
+### AC-007 â€” Pending accounts cannot act
 
 - **Given** a pending freelancer with a valid session
 - **When** they submit an application
 - **Then** no application exists and the response states approval is pending
 
-### AC-008 — Withdrawal cannot exceed the balance
+### AC-008 â€” Withdrawal cannot exceed the balance
 
 - **Given** a freelancer with 150.00 available and no open withdrawal
 - **When** they request 200.00
 - **Then** the request is rejected and available remains 150.00
 
-### AC-009 — KYC gates withdrawal
+### AC-009 â€” KYC gates withdrawal
 
 - **Given** an approved freelancer with no approved KYC document
 - **When** they request a withdrawal
 - **Then** the request is rejected with a message naming the missing requirement
 
-### AC-010 — CMS changes propagate
+### AC-010 â€” CMS changes propagate
 
 - **Given** admin changes the site name and contact email
 - **When** a visitor loads the landing page and an email is dispatched
 - **Then** both show the new values and no page contains the old value
 
-### AC-011 — Admin actions are auditable
+### AC-011 â€” Admin actions are auditable
 
 - **Given** admin performs a wallet adjustment
 - **When** the audit log is viewed
 - **Then** exactly one row exists naming the actor, target, amount, reason and timestamp
 
-### AC-012 — Public endpoints leak nothing private
+### AC-012 â€” Public endpoints leak nothing private
 
 - **Given** any unauthenticated request to any public route
 - **When** the responses are inspected
 - **Then** no response contains an email address, wallet figure, phone number, or KYC path
 
-### AC-013 — Milestone amounts must equal the budget
+### AC-013 â€” Milestone amounts must equal the budget
 
 - **Given** a poster defining milestones of 100.00 and 150.00 for a job budgeted at 300.00
 - **When** they submit the job
 - **Then** the job is rejected and the error states the milestone total does not
   match the budget
 
-### AC-014 — Milestones release in strict order
+### AC-014 â€” Milestones release in strict order
 
 - **Given** a job with milestone 1 pending and milestone 2 accepted
 - **When** admin attempts to release milestone 2
 - **Then** the release is rejected and no ledger row is created
 
-### AC-015 — One milestone release cannot exceed total escrow
+### AC-015 â€” One milestone release cannot exceed total escrow
 
 - **Given** a job with 500.00 escrowed across three milestones
 - **When** all three milestones are released
 - **Then** the sum credited equals exactly 500.00 and the escrow balance is zero,
   and no further release is possible
 
-### AC-015b — Partial refund respects released milestones
+### AC-015b â€” Partial refund respects released milestones
 
 - **Given** a three-milestone job with 500.00 escrowed where milestone 1 (200.00)
   is released
@@ -981,102 +981,102 @@ operations, and the UI must label them as simulated.
 - **Then** the poster receives exactly 300.00, the freelancer keeps 200.00, and the
   escrow balance is zero
 
-### AC-016 — A reviewer cannot review twice
+### AC-016 â€” A reviewer cannot review twice
 
 - **Given** account A has already reviewed freelancer B
 - **When** A submits another review of B
 - **Then** B's profile still shows exactly one review from A, with the updated rating
 
-### AC-016b — No job relationship is required
+### AC-016b â€” No job relationship is required
 
 - **Given** a signed-in poster who has never posted a job and never hired anyone
 - **When** they review a freelancer
 - **Then** the review publishes immediately and appears on that freelancer's profile
 
-### AC-016c — Display name is free text
+### AC-016c â€” Display name is free text
 
 - **Given** a signed-in user whose account name is "Ada Okafor"
 - **When** they submit a review with the display name "Brightline Studio Ltd"
 - **Then** the profile shows "Brightline Studio Ltd", not "Ada Okafor"
 
-### AC-016d — Admin can author a review with no linked user
+### AC-016d â€” Admin can author a review with no linked user
 
 - **Given** admin is creating a review for a freelancer
 - **When** they supply a name, a rating and a comment without selecting any user
 - **Then** the review publishes immediately, is attributed as posted by the platform,
   and no user account is referenced by the review
 
-### AC-016e — Guests cannot submit
+### AC-016e â€” Guests cannot submit
 
 - **Given** a visitor who is not signed in
 - **When** they attempt to submit a review
 - **Then** the request is rejected and no review is created
 
-### AC-017 — A user cannot review themselves
+### AC-017 â€” A user cannot review themselves
 
 - **Given** an approved user
 - **When** they submit a review targeting their own account
 - **Then** the request is rejected and no review is created
 
-### AC-018 — Hidden reviews leave the average
+### AC-018 â€” Hidden reviews leave the average
 
 - **Given** a user with visible reviews averaging 4.0 and one 1-star review
 - **When** admin hides the 1-star review
 - **Then** the public average returns to 4.0 and the review count decreases by one
 
-### AC-019 — Admin review actions are audited
+### AC-019 â€” Admin review actions are audited
 
 - **Given** admin hides, edits, adds or deletes a review
 - **When** the audit log is viewed
 - **Then** exactly one row exists per action naming the actor, target review, action and reason
 
-### AC-019b — Review throttling blocks flooding
+### AC-019b â€” Review throttling blocks flooding
 
 - **Given** a signed-in user submitting reviews repeatedly across many freelancers
 - **When** they exceed the configured submission rate
 - **Then** further submissions are throttled, no additional reviews are created, and
   already-published reviews remain visible
 
-### AC-020 — Branding changes propagate everywhere
+### AC-020 â€” Branding changes propagate everywhere
 
 - **Given** admin changes the site name and uploads a new logo
 - **When** a visitor loads the landing page, a job page, and an outgoing email is dispatched
 - **Then** all three show the new name and logo, and no rendered output contains the old brand
 
-### AC-021 — NGN is rejected everywhere
+### AC-021 â€” NGN is rejected everywhere
 
 - **Given** any form or endpoint that accepts a currency code
 - **When** `NGN` is submitted
 - **Then** validation rejects it, nothing is persisted, and no page, seed or
   fixture renders an NGN amount
 
-### AC-022 — A deposit request credits nothing until approved
+### AC-022 â€” A deposit request credits nothing until approved
 
 - **Given** a poster with a balance of 0.00 who submits a deposit request for 500.00
 - **When** the request is saved
 - **Then** the request is `pending` and the poster's derived balance is still 0.00
 
-### AC-023 — Admin approval credits exactly the chosen amount
+### AC-023 â€” Admin approval credits exactly the chosen amount
 
 - **Given** a pending deposit request for 500.00 where 5.00 of fees were taken
 - **When** admin approves it crediting 495.00
 - **Then** exactly one `deposit_credit` ledger row of 495.00 exists and the
   poster's balance is 495.00, not 500.00
 
-### AC-024 — Disabled payment methods are hidden
+### AC-024 â€” Disabled payment methods are hidden
 
 - **Given** admin has two enabled crypto methods and one disabled bank method
 - **When** a poster opens the funding page
 - **Then** only the two enabled methods are listed, and submitting a deposit request
   referencing the disabled method is rejected
 
-### AC-025 — Deposit approval is idempotent
+### AC-025 â€” Deposit approval is idempotent
 
 - **Given** an already-approved deposit request
 - **When** admin attempts to approve it again
 - **Then** the request is rejected and no second ledger row is created
 
-### AC-026 — No stored balance can drift
+### AC-026 â€” No stored balance can drift
 
 - **Given** any sequence of deposits, escrow holds, releases, refunds,
   adjustments and withdrawals applied to a user
@@ -1084,7 +1084,7 @@ operations, and the UI must label them as simulated.
 - **Then** it equals the displayed figure to the cent, and no table contains a
   column that stores a balance
 
-### AC-027 — Withdrawal requires funds that actually arrived
+### AC-027 â€” Withdrawal requires funds that actually arrived
 
 - **Given** a poster whose only funding came from an unapproved deposit request
 - **When** they attempt to fund a job
@@ -1097,7 +1097,7 @@ operations, and the UI must label them as simulated.
 
 | # | Assumption | Impact if wrong | Confirmed? |
 |---|---|---|---|
-| A1 | Demonstration project, no real money or real KYC obligation | regulatory work disappears; escrow can be simulated | yes — stated by owner |
+| A1 | Demonstration project, no real money or real KYC obligation | regulatory work disappears; escrow can be simulated | yes â€” stated by owner |
 | A2 | Single wallet currency USD, display conversion only | multi-currency wallets would need a ledger redesign | yes |
 | A3 | Admin manually releases and refunds escrow | automation would need a dispute policy | yes |
 | A4 | Async messaging is sufficient; no websockets | real-time would change hosting | yes |
@@ -1105,16 +1105,16 @@ operations, and the UI must label them as simulated.
 | A6 | Jobs publish immediately once funded; no moderation queue | moderation adds a status and admin workload | yes |
 | A7 | Approval gates actions but not login | gating login would change the auth flow | yes |
 | A8 | One freelancer hired per job | multi-hire would change escrow to per-hire holds | yes |
-| A9 | Milestones exist and the **full** budget is funded upfront, earmarked across milestones | funding-per-milestone would allow a job to stall halfway | yes — revision 2 |
+| A9 | Milestones exist and the **full** budget is funded upfront, earmarked across milestones | funding-per-milestone would allow a job to stall halfway | yes â€” revision 2 |
 | A10 | Shared cPanel supports the required PHP extensions and cron | otherwise the host choice changes | not confirmed |
-| A11 | Reviews are open testimonial-style: any signed-in user reviews any freelancer, no job relationship needed, display name is free text, and admin may author reviews with no linked user | requiring verified relationships would add a job link and remove guest-style reviews | yes — revision 3 |
-| A12 | Jobs are priced in USD only; the display whitelist is USD/EUR/GBP/CAD | wider currency support changes validation and FX surface | yes — revision 2 |
-| A13 | Escrow is a single USD hold per job, internally earmarked per milestone | per-milestone holds would change refund rules | yes — revision 2 |
-| A14 | Reviews are visible to the public without login | gating reviews behind login would shrink social proof | yes — revision 3 |
-| A15 | Reviews publish immediately with no approval queue, and abuse is handled reactively | a pre-moderation queue would change admin workload and add a pending state | yes — revision 3 |
-| A16 | Wallet funding is **manual**: posters transfer outside the app and admin approves each deposit | an integrated gateway would need a provider, webhooks and PCI scope | yes — revision 4 |
-| A17 | Admin may approve a deposit for a different amount than requested (e.g. net of fees) | crediting the requested amount would create money that never arrived | yes — revision 4 |
-| A18 | Bank and crypto details are supplied by admin, not generated per poster | per-poster addresses would need a wallet provider | yes — revision 4 |
+| A11 | Reviews are open testimonial-style: any signed-in user reviews any freelancer, no job relationship needed, display name is free text, and admin may author reviews with no linked user | requiring verified relationships would add a job link and remove guest-style reviews | yes â€” revision 3 |
+| A12 | Jobs are priced in USD only; the display whitelist is USD/EUR/GBP/CAD | wider currency support changes validation and FX surface | yes â€” revision 2 |
+| A13 | Escrow is a single USD hold per job, internally earmarked per milestone | per-milestone holds would change refund rules | yes â€” revision 2 |
+| A14 | Reviews are visible to the public without login | gating reviews behind login would shrink social proof | yes â€” revision 3 |
+| A15 | Reviews publish immediately with no approval queue, and abuse is handled reactively | a pre-moderation queue would change admin workload and add a pending state | yes â€” revision 3 |
+| A16 | Wallet funding is **manual**: posters transfer outside the app and admin approves each deposit | an integrated gateway would need a provider, webhooks and PCI scope | yes â€” revision 4 |
+| A17 | Admin may approve a deposit for a different amount than requested (e.g. net of fees) | crediting the requested amount would create money that never arrived | yes â€” revision 4 |
+| A18 | Bank and crypto details are supplied by admin, not generated per poster | per-poster addresses would need a wallet provider | yes â€” revision 4 |
 
 ---
 
@@ -1126,18 +1126,18 @@ operations, and the UI must label them as simulated.
 | # | Question | Blocks | Status | Impact |
 |---|---|---|---|---|
 | Q1 | Is one freelancer hired per job, or can a poster hire several against one escrow? | data model, escrow | answered | A8: one hire per job in release 1 |
-| Q2 | Does the poster see the freelancer's proposed amount before hiring, and does hiring at a different amount require re-funding escrow? | hiring flow | open | Deferred: non-blocking — release 1 pays the budgeted amount; proposed amount is informational |
-| Q3 | Where does the FX rate come from, how often is it refreshed, and what happens if it is stale for days? | display conversion | open | Deferred: non-blocking — daily refresh, cache with last-known fallback, rate stored per record |
-| Q4 | Which SMTP provider will the owner configure? | email | open | Deferred: non-blocking — any SMTP works; owner configures at deploy |
-| Q5 | Should suspended users' open jobs be auto-paused? | job lifecycle | open | Deferred: non-blocking — release 1 leaves jobs visible and flags them in admin |
-| Q6 | Is a soft-deleted account's public profile hidden immediately? | privacy | open | Deferred: non-blocking — default to hidden immediately |
-| Q7 | Can a milestone be delivered retroactively out of order (e.g. freelancer does 1 and 3 first)? | milestone lifecycle | open | Deferred: non-blocking — release 1 requires strict order for release, but delivery may be marked in any order |
-| Q8 | Should a review be deletable by the reviewer themselves? | reviews | open | Deferred: non-blocking — release 1 lets only admin delete; reviewers may edit their own || Q9 | What is the maximum logo file size and allowed formats? | branding | open | Deferred: non-blocking — PNG/JPG/SVG up to 2 MB |
-| Q10 | Does a job with milestones show each milestone's amount publicly? | job display | open | Deferred: non-blocking — release 1 shows the total budget publicly and milestone breakdown only to the hired freelancer |
-| Q11 | Should an unapproved deposit request expire after N days? | deposit flow | open | Deferred: non-blocking — release 1 leaves requests pending indefinitely rather than auto-rejecting |
-| Q12 | May a poster submit multiple concurrent deposit requests? | deposit flow | open | Deferred: non-blocking — release 1 allows it; each is approved independently |
-| Q13 | For crypto deposits, is the USD amount taken from the transfer-date rate or chosen by admin? | deposit approval | open | Deferred: non-blocking — release 1 lets admin choose the credited USD amount and record the reference |
-| Q14 | Are posters allowed to fund wallets before account approval? | deposit flow | open | Deferred: non-blocking — release 1 requires an approved account to submit a deposit |
+| Q2 | Does the poster see the freelancer's proposed amount before hiring, and does hiring at a different amount require re-funding escrow? | hiring flow | open | Deferred: non-blocking â€” release 1 pays the budgeted amount; proposed amount is informational |
+| Q3 | Where does the FX rate come from, how often is it refreshed, and what happens if it is stale for days? | display conversion | open | Deferred: non-blocking â€” daily refresh, cache with last-known fallback, rate stored per record |
+| Q4 | Which SMTP provider will the owner configure? | email | open | Deferred: non-blocking â€” any SMTP works; owner configures at deploy |
+| Q5 | Should suspended users' open jobs be auto-paused? | job lifecycle | open | Deferred: non-blocking â€” release 1 leaves jobs visible and flags them in admin |
+| Q6 | Is a soft-deleted account's public profile hidden immediately? | privacy | open | Deferred: non-blocking â€” default to hidden immediately |
+| Q7 | Can a milestone be delivered retroactively out of order (e.g. freelancer does 1 and 3 first)? | milestone lifecycle | open | Deferred: non-blocking â€” release 1 requires strict order for release, but delivery may be marked in any order |
+| Q8 | Should a review be deletable by the reviewer themselves? | reviews | open | Deferred: non-blocking â€” release 1 lets only admin delete; reviewers may edit their own || Q9 | What is the maximum logo file size and allowed formats? | branding | open | Deferred: non-blocking â€” PNG/JPG/SVG up to 2 MB |
+| Q10 | Does a job with milestones show each milestone's amount publicly? | job display | open | Deferred: non-blocking â€” release 1 shows the total budget publicly and milestone breakdown only to the hired freelancer |
+| Q11 | Should an unapproved deposit request expire after N days? | deposit flow | open | Deferred: non-blocking â€” release 1 leaves requests pending indefinitely rather than auto-rejecting |
+| Q12 | May a poster submit multiple concurrent deposit requests? | deposit flow | open | Deferred: non-blocking â€” release 1 allows it; each is approved independently |
+| Q13 | For crypto deposits, is the USD amount taken from the transfer-date rate or chosen by admin? | deposit approval | open | Deferred: non-blocking â€” release 1 lets admin choose the credited USD amount and record the reference |
+| Q14 | Are posters allowed to fund wallets before account approval? | deposit flow | open | Deferred: non-blocking â€” release 1 requires an approved account to submit a deposit |
 
 ---
 
@@ -1145,19 +1145,19 @@ operations, and the UI must label them as simulated.
 
 | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|
-| Money arithmetic bugs (float, rounding, double-spend) | medium | high — corrupts all balances | integer cents, derived balances, ledger reconciliation test in CI |
-| Escrow double-release or double-refund | medium | high — invents money | idempotency keys per **milestone** transition + unique constraints |
-| Milestone total drifting from job budget | medium | high — unpayable job | validate sum at creation and re-verify before each release |
-| Review abuse or spam (open review model) | **high** | medium — reputational damage | per-account + per-source throttling, user flagging, admin hide/delete, audit trail. **Accepted residual risk:** reviews are unverifiable by design — a reviewer need not have worked with the freelancer, so a rating is a social signal, not proof of a transaction. |
-| Defamation or fake negative reviews from a competitor | **medium** | **high** — legal and reputational | immediate admin takedown path, full audit trail, terms of use stating reviews are user-submitted, prominent report button |
-| Admin-authored reviews read as organic user reviews | medium | medium — trust erosion | permanently attributed as "posted by the platform"; never disguised as a user review |
-| Cross-user data leak (thread, wallet, KYC) | medium | high — privacy breach | object-level policy tests for every entity |
-| Branding hard-coded in a template | medium | low — inconsistent surface | settings-driven accessor only; test that no view contains the literal brand |
-| NGN leaking in through seed data or a provider default | medium | medium — violates a stated requirement | validation whitelist + a test that greps rendered output for NGN |
-| Shared-host limits (no queue worker, symlink failure) | high | medium — features silently dead | capability sheet verified before build; cron-driven queue proven in a milestone |
-| Scope creep into disputes/ratings/real-time chat | high | medium — release never ships | explicit out-of-scope list; changes require a requirements update |
-| KYC documents stored insecurely | medium | high — serious privacy harm | private disk outside webroot, owner+admin access only, never a public URL |
-| Admin as escrow is a single point of failure | medium | medium — demo only, acceptable | every action audited with reason; reconcile report for admin |
+| Money arithmetic bugs (float, rounding, double-spend) | medium | high â€” corrupts all balances | integer cents, derived balances, ledger reconciliation test in CI |
+| Escrow double-release or double-refund | medium | high â€” invents money | idempotency keys per **milestone** transition + unique constraints |
+| Milestone total drifting from job budget | medium | high â€” unpayable job | validate sum at creation and re-verify before each release |
+| Review abuse or spam (open review model) | **high** | medium â€” reputational damage | per-account + per-source throttling, user flagging, admin hide/delete, audit trail. **Accepted residual risk:** reviews are unverifiable by design â€” a reviewer need not have worked with the freelancer, so a rating is a social signal, not proof of a transaction. |
+| Defamation or fake negative reviews from a competitor | **medium** | **high** â€” legal and reputational | immediate admin takedown path, full audit trail, terms of use stating reviews are user-submitted, prominent report button |
+| Admin-authored reviews read as organic user reviews | medium | medium â€” trust erosion | permanently attributed as "posted by the platform"; never disguised as a user review |
+| Cross-user data leak (thread, wallet, KYC) | medium | high â€” privacy breach | object-level policy tests for every entity |
+| Branding hard-coded in a template | medium | low â€” inconsistent surface | settings-driven accessor only; test that no view contains the literal brand |
+| NGN leaking in through seed data or a provider default | medium | medium â€” violates a stated requirement | validation whitelist + a test that greps rendered output for NGN |
+| Shared-host limits (no queue worker, symlink failure) | high | medium â€” features silently dead | capability sheet verified before build; cron-driven queue proven in a milestone |
+| Scope creep into disputes/ratings/real-time chat | high | medium â€” release never ships | explicit out-of-scope list; changes require a requirements update |
+| KYC documents stored insecurely | medium | high â€” serious privacy harm | private disk outside webroot, owner+admin access only, never a public URL |
+| Admin as escrow is a single point of failure | medium | medium â€” demo only, acceptable | every action audited with reason; reconcile report for admin |
 
 ---
 
@@ -1165,10 +1165,10 @@ operations, and the UI must label them as simulated.
 
 1. Every FR above has passing acceptance evidence in `.aidev/evidence/`.
 2. `aidev gate` passes G0 through G8.
-3. A full journey runs in a real browser: register → approve → fund escrow →
-   publish → apply → hire → message → deliver milestone 1 → accept → admin
-   release milestone 1 → deliver milestone 2 → accept → admin release →
-   withdraw → admin pay → leave a review.
+3. A full journey runs in a real browser: register â†’ approve â†’ fund escrow â†’
+   publish â†’ apply â†’ hire â†’ message â†’ deliver milestone 1 â†’ accept â†’ admin
+   release milestone 1 â†’ deliver milestone 2 â†’ accept â†’ admin release â†’
+   withdraw â†’ admin pay â†’ leave a review.
 4. Every wallet balance reconciles to the ledger, demonstrated by a test.
 5. Milestone totals always equal the job budget, demonstrated by a test.
 6. Changing the site name and logo updates every surface, demonstrated by a test.
