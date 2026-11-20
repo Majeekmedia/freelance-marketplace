@@ -91,6 +91,10 @@
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.users.index') }}">Accounts</a>
                 @endif
+                @if(auth()->user()->isFreelancer())
+                    <a href="{{ route('portfolio.index') }}">Portfolio</a>
+                    <a href="{{ route('profile.edit') }}">Profile</a>
+                @endif
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <form method="POST" action="{{ route('logout') }}" style="margin:0">
                     @csrf

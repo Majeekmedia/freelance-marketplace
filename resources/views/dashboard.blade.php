@@ -35,9 +35,32 @@
 
     @else
         <h2 style="font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .6rem">Your work</h2>
-        <p style="font-size:.875rem;color:var(--ink-2);margin:0">
-            Your profile, portfolio and job applications arrive in milestone M3 onward.
-        </p>
+        @php
+            $profile = auth()->user()->freelancerProfile;
+        @endphp
+        @if ($profile === null)
+            <p style="font-size:.875rem;color:var(--ink-2);margin:0 0 1rem">
+                Add a headline and a few portfolio pieces so posters can judge your work
+                before they message you.
+            </p>
+            <a class="btn" href="{{ route('profile.edit') }}">Set up your profile</a>
+        @else
+            <p style="font-size:.875rem;color:var(--ink-2);margin:0 0 1rem">
+                {{ $profile->headline ?: 'No headline yet' }}
+                @if ($profile->is_public)
+                    · visible in the public directory
+                @else
+                    · hidden from the public directory
+                @endif
+            </p>
+            <div class="actions" style="justify-content:flex-start">
+                <a class="btn btn-secondary" href="{{ route('profile.edit') }}">Edit profile</a>
+                <a class="btn btn-secondary" href="{{ route('portfolio.index') }}">Portfolio</a>
+                @if ($profile->is_public && auth()->user()->status->canAct())
+                    <a class="btn" href="{{ route('freelancers.show', auth()->id()) }}">View public page</a>
+                @endif
+            </div>
+        @endif
     @endif
 </div>
 @endsection

@@ -7,6 +7,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicDirectoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,6 +63,44 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Public directory
+|--------------------------------------------------------------------------
+| Deliberately outside the `auth` group: a visitor must be able to judge a
+| freelancer before creating an account. The policy decides visibility, and a
+| pending or private profile is unreachable.
+*/
+
+Route::get('/freelancers', [PublicDirectoryController::class, 'freelancers'])->name('freelancers.index');
+Route::get('/freelancers/{freelancer}', [ProfileController::class, 'show'])->name('freelancers.show');
+
+/*
+|--------------------------------------------------------------------------
+| Freelancer own area
+|--------------------------------------------------------------------------
+| No `account` gate on editing the profile: a pending freelancer must be able
+| to fill it in so an admin has something to review. Publishing publicly is
+| gated separately by the policy.
+*/
+
+Route::middleware('auth')->group(function (): void {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+
+    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+    Route::post('/portfolio', [PortfolioController::class, 'store'])
+        ->middleware('account')
+        ->name('portfolio.store');
+    Route::put('/portfolio/{portfolio}', [PortfolioController::class, 'update'])
+        ->middleware('account')
+        ->name('portfolio.update');
+    Route::delete('/portfolio/{portfolio}', [PortfolioController::class, 'destroy'])
+        ->middleware('account')
+        ->name('portfolio.destroy');
 });
 
 /*

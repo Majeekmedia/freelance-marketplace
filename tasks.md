@@ -108,14 +108,15 @@
 
 ### T-009 — Freelancer profile and portfolio
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M3
-- **Requirements:** FR-007, FR-008
-- **Files:** `freelancer_profiles`, `portfolios` migrations + models, `ProfileController`, public profile page
-- **Depends:** T-006
+- **Requirements:** FR-007, FR-008, NFR-009
+- **Files:** `freelancer_profiles`, `portfolios` migrations + models, `ProfileController`, `PortfolioController`, `PublicDirectoryController`, `AuthServiceProvider`, 4 policies/requests, 4 views, public profile page
+- **Depends:** T-006 (done)
 - **Verify:** profile edit persists and appears publicly; public page never renders email, phone or balance; freelancer A cannot edit B's portfolio item (403/404)
-- **Evidence:**
+- **Evidence:** `.aidev/evidence/M3-T009-profile.md` — passed 21 · failed 0 · blocked 0; suite 186 passed
 - **Risk:** medium
+- **Notes:** three defects found and fixed — (1) Laravel 12's base controller lacks `AuthorizesRequests`, so every policy denial was a 500 not a 403; (2) profile/portfolio were unreachable from the UI despite passing tests; (3) the test suite was wiping the dev database (L-008).
 
 ### T-010 — Categories and job creation (draft)
 

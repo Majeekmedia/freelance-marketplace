@@ -91,6 +91,20 @@ class User extends Authenticatable
         return $this->status === UserStatus::PENDING;
     }
 
+    // ------------------------------------------------------------- relations
+
+    public function freelancerProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(FreelancerProfile::class);
+    }
+
+    public function portfolios(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Portfolio::class)
+            ->orderBy('sort_order')
+            ->orderBy('id');
+    }
+
     // ---------------------------------------------------------------- scopes
 
     /** @param  Builder<User>  $query */
