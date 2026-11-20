@@ -11,7 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Named aliases so routes read declaratively:
+        //   ->middleware(['auth', 'account'])   gated action
+        //   ->middleware(['auth', 'admin'])     admin area
+        $middleware->alias([
+            'account' => \App\Http\Middleware\AccountGate::class,
+            'admin' => \App\Http\Middleware\AdminGate::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
