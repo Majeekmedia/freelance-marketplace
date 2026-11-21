@@ -476,6 +476,13 @@ body.menu-open{overflow:hidden}
   .step{border-left:0;padding-left:0;border-top:1px solid var(--rule-2);padding-top:1rem}
   .step:first-child{border-top:0;padding-top:0}
   .stat{padding-right:1.1rem;margin-right:1.1rem}
+  /*
+   * Between 431px and 720px three padded columns still squeeze "MEDIAN RELEASE"
+   * into a cramped box. Tighter padding is enough here — the labels stay on one
+   * line, just with less air around them.
+   */
+  .stat-val{font-size:1.45rem}
+  .stat-lab{font-size:.68rem;letter-spacing:.04em}
   .foot-grid{grid-template-columns:1fr}
 }
 
@@ -488,9 +495,43 @@ body.menu-open{overflow:hidden}
   .search{flex-direction:column;gap:.4rem}
   .search-field{padding-left:.5rem}
   .search .btn{width:100%}
-  .stat{border-right:0;padding-right:0;margin-right:0}
-  .stats{gap:.85rem 0}
   .hero-figure{aspect-ratio:4/3.4}
+
+  /*
+   * Stats on a narrow phone.
+   *
+   * The previous rule removed the divider AND all horizontal spacing
+   * (`padding/margin-right: 0`, `gap: .85rem 0`), which left the three
+   * uppercase labels touching: "IN ESCROW NOWJOBS FUNDEDMEDIAN RELEASE".
+   *
+   * Three columns of ~105px cannot hold labels like "MEDIAN RELEASE" on one
+   * line, so this becomes a two-column grid where each figure gets ~160px and
+   * the label stays readable. The third item simply starts a new row.
+   *
+   * `align-items:start` keeps the number baselines aligned even when one label
+   * wraps to a second line.
+   */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:.9rem 1rem;
+    align-items:start;
+  }
+  /* Dividers are meaningless in a grid with real gaps; the gap does that job. */
+  .stat,
+  .stat:last-child{
+    border-right:0;
+    padding-right:0;
+    margin-right:0;
+  }
+  .stat-val{font-size:1.4rem}
+  .stat-lab{
+    font-size:.68rem;
+    letter-spacing:.06em;
+    margin-top:.3rem;
+    /* Allow a long label to wrap rather than push the grid wider. */
+    overflow-wrap:anywhere;
+  }
 }
 
 @media (prefers-reduced-motion:reduce){
