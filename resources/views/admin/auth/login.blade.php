@@ -135,6 +135,8 @@
         </form>
 
         <p class="foot">
+            <a href="{{ route('admin.password.request') }}">Forgot your password?</a>
+            <span style="margin:0 .35rem;color:var(--rule-2)">·</span>
             Looking for your own account? <a href="{{ route('login') }}">Customer sign-in</a>.
         </p>
     </div>

@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\DepositController as AdminDepositController;
 use App\Http\Controllers\Admin\OverviewController;
+use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\Admin\PaymentMethodController as AdminPaymentMethodController;
 use App\Http\Controllers\Admin\PlaceholderController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\AdminPasswordResetController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobManageController;
 use App\Http\Controllers\PortfolioController;
@@ -27,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', fn () => view('welcome'))->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -213,6 +217,23 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::post('/login', [AdminLoginController::class, 'store'])
             ->middleware('throttle:10,1')
             ->name('login.store');
+
+        /*
+         * Password reset for administrators.
+         *
+         * This DOES send an email — but only to an address registered as an
+         * administrator, and the response is identical either way so the form
+         * cannot be used to discover which addresses are admins.
+         *
+         * The reset itself reuses the standard broker and the customer reset
+         * route, because a one-time signed token is the same mechanism whoever
+         * it belongs to. What differs is who is allowed to request one from here.
+         */
+        Route::get('/forgot-password', [AdminPasswordResetController::class, 'requestForm'])
+            ->name('password.request');
+        Route::post('/forgot-password', [AdminPasswordResetController::class, 'sendLink'])
+            ->middleware('throttle:6,1')
+            ->name('password.email');
     });
 
     Route::post('/logout', [AdminLoginController::class, 'destroy'])
@@ -239,6 +260,18 @@ Route::middleware(['auth', 'admin', 'account'])
         // Sections whose feature is not built yet. Named routes so the nav can
         // link honestly instead of hiding items.
         Route::get('/soon/{section}', PlaceholderController::class)->name('placeholder');
+
+        /*
+         * Self-service settings (FR-027, FR-035).
+         *
+         * Change-password requires the current password and rotates the session,
+         * because an unattended admin session must not be enough to take over the
+         * account permanently.
+         */
+        Route::get('/settings/site', [AdminSettingsController::class, 'edit'])->name('settings.site');
+        Route::post('/settings/site', [AdminSettingsController::class, 'update'])->name('settings.site.update');
+        Route::get('/settings/password', [AdminPasswordController::class, 'edit'])->name('settings.password');
+        Route::post('/settings/password', [AdminPasswordController::class, 'update'])->name('settings.password.update');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');

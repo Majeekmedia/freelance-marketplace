@@ -40,12 +40,16 @@ class LogoUploader
     /**
      * Laravel validation rules for a logo upload.
      *
+     * `nullable` rather than `required`: the logo is optional. An admin may be
+     * saving only the brand name or contact email, and requiring a file would
+     * make every other field on the settings form unsavable.
+     *
      * @return list<string>
      */
     public static function rules(): array
     {
         return [
-            'required',
+            'nullable',
             'file',
             'image',
             'mimes:png,jpg,jpeg,webp',

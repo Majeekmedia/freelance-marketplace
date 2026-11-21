@@ -111,16 +111,82 @@
         /* ------------------------------------------------------------ main area */
         .main{flex:1;min-width:0;display:flex;flex-direction:column}
         .topbar{
-            display:flex;align-items:center;gap:1rem;
-            padding:.75rem clamp(16px,3vw,32px);
+            display:flex;align-items:center;gap:.75rem;
+            padding:.6rem clamp(16px,3vw,32px);
             background:#fff;border-bottom:1px solid var(--rule);
-            position:sticky;top:0;z-index:10;
+            position:sticky;top:0;z-index:30;
         }
-        .topbar-title{font-size:.82rem;color:var(--ink-3)}
+        .topbar-title{font-size:.82rem;color:var(--ink-3);min-width:0}
         .topbar-title strong{color:var(--ink);font-weight:600}
-        .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:.6rem;font-size:.8rem}
+        .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.8rem}
         .who{color:var(--ink-2)}
         .who b{font-weight:600;color:var(--ink)}
+
+        /* Brand in the header. Uses the admin's uploaded logo when there is one,
+           so changing the logo in settings changes it here too. */
+        .topbar-brand{display:none;align-items:center;gap:.5rem;font-family:var(--serif);font-size:1rem;min-width:0}
+        .topbar-brand img{height:24px;width:auto;display:block}
+        .topbar-mark{
+            width:25px;height:25px;border-radius:6px;flex:none;
+            background:var(--forest);color:#fff;
+            display:grid;place-items:center;font-family:var(--sans);
+            font-size:.62rem;font-weight:700;
+        }
+        .topbar-brand-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+        .icon-btn{
+            width:36px;height:36px;flex:none;
+            display:inline-grid;place-items:center;
+            border-radius:8px;border:1px solid transparent;background:none;
+            color:var(--ink-2);cursor:pointer;padding:0;position:relative;
+            -webkit-tap-highlight-color:transparent;
+        }
+        .icon-btn:hover{background:var(--paper-2);color:var(--ink)}
+        .icon-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+        /*
+         * Header menu. <details> gives open/close, Escape and outside-click
+         * behaviour with no JavaScript and no framework, which is the right
+         * trade for one menu.
+         */
+        .hmenu{position:relative;margin-left:auto}
+        .hmenu > summary{
+            list-style:none;cursor:pointer;
+            display:inline-grid;place-items:center;
+            width:36px;height:36px;border-radius:8px;
+            border:1px solid transparent;color:var(--ink-2);
+        }
+        .hmenu > summary::-webkit-details-marker{display:none}
+        .hmenu > summary:hover{background:var(--paper-2);color:var(--ink)}
+        .hmenu > summary svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+        .hmenu[open] > summary{background:var(--paper-2);color:var(--ink)}
+
+        .hmenu-panel{
+            position:absolute;top:calc(100% + .5rem);right:0;
+            min-width:248px;max-width:calc(100vw - 2rem);
+            background:#fff;border:1px solid var(--rule);border-radius:12px;
+            box-shadow:0 14px 38px rgba(22,20,15,.16);
+            padding:.4rem;z-index:50;
+        }
+        .hmenu-panel .hmenu-head{
+            padding:.5rem .6rem .6rem;border-bottom:1px solid var(--rule);margin-bottom:.3rem;
+        }
+        .hmenu-panel .hmenu-head-name{font-size:.86rem;font-weight:600;line-height:1.3}
+        .hmenu-panel .hmenu-head-meta{font-size:.73rem;color:var(--ink-3);margin-top:.1rem}
+        .hmenu-group{
+            font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+            color:var(--ink-3);font-weight:600;padding:.6rem .6rem .25rem;
+        }
+        .hmenu-panel a,
+        .hmenu-panel button{
+            display:flex;align-items:center;gap:.6rem;width:100%;
+            padding:.5rem .6rem;border-radius:7px;border:0;background:none;
+            font:inherit;font-size:.85rem;color:var(--ink);text-align:left;cursor:pointer;
+        }
+        .hmenu-panel a:hover,
+        .hmenu-panel button:hover{background:var(--paper-2)}
+        .hmenu-panel svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;color:var(--ink-3)}
+        .hmenu-panel hr{border:0;border-top:1px solid var(--rule);margin:.35rem .25rem}
 
         .wrap{padding:clamp(20px,3vw,34px) clamp(16px,3vw,32px) 4rem;max-width:1200px;width:100%}
 
@@ -220,6 +286,10 @@
 
             .topbar-title{display:none}
             .who{display:none}
+            /* On mobile the header carries the brand, because the sidebar (which
+               held it) is gone. */
+            .topbar-brand{display:flex}
+            .beam-divider{display:none}
         }
 
         @media (max-width:760px){
@@ -314,6 +384,20 @@
                 'soon' => true,
             ],
         ],
+        'Settings' => [
+            [
+                'route' => 'admin.settings.site',
+                'label' => 'Site settings',
+                'pattern' => 'admin.settings.site*',
+                'icon' => 'sliders',
+            ],
+            [
+                'route' => 'admin.settings.password',
+                'label' => 'Change password',
+                'pattern' => 'admin.settings.password*',
+                'icon' => 'key',
+            ],
+        ],
     ];
 
     $mobileTabs = [
@@ -331,6 +415,8 @@
             'card' => '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 15h4"/>',
             'briefcase' => '<rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12h18"/>',
             'lock' => '<rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>',
+            'sliders' => '<path d="M4 7h10"/><path d="M18 7h2"/><circle cx="16" cy="7" r="2"/><path d="M4 17h2"/><path d="M10 17h10"/><circle cx="8" cy="17" r="2"/>',
+            'key' => '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9"/><path d="m17 6 2 2"/><path d="m14 9 2 2"/>',
             default => '',
         };
     };
@@ -382,15 +468,97 @@
 
     <div class="main">
         <div class="topbar">
+            {{--
+                Brand in the header.
+
+                Uses the admin's uploaded logo when there is one, so changing the
+                logo in site settings changes it here on the very next load. On
+                mobile this is the only place the brand appears, because the
+                sidebar is replaced by the tab bar.
+            --}}
+            <a class="topbar-brand" href="{{ route('admin.overview') }}">
+                @if (\App\Support\LogoUploader::url())
+                    <img src="{{ \App\Support\LogoUploader::url() }}"
+                         alt="{{ \App\Support\SiteSettings::brandName() }}">
+                @else
+                    <span class="topbar-mark" aria-hidden="true">{{ \App\Support\SiteSettings::initials() }}</span>
+                @endif
+                <span class="topbar-brand-name">{{ \App\Support\SiteSettings::brandName() }}</span>
+                <span class="nav-soon" style="margin-left:.15rem">Admin</span>
+            </a>
+
             <div class="topbar-title">
                 <strong>Admin console</strong>
                 <span style="margin:0 .4rem;color:var(--rule-2)">·</span>
                 separate from the customer app
             </div>
+
             <div class="topbar-actions">
                 <span class="who">Signed in as <b>{{ auth()->user()->name }}</b></span>
-                <a class="btn btn-secondary btn-sm" href="{{ route('home') }}">View site</a>
+                <a class="btn btn-secondary btn-sm beam-divider" href="{{ route('home') }}">View site</a>
             </div>
+
+            {{--
+                Header menu: everything that does not fit in the bottom tab bar.
+
+                Settings, the customer-site escape hatch and sign-out live here
+                rather than being crammed into the mobile tabs. On desktop the
+                sidebar already carries the sections, so this menu adds only what
+                the sidebar does not: self-service settings and account actions.
+            --}}
+            <details class="hmenu">
+                <summary aria-label="Menu">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>
+                    </svg>
+                </summary>
+
+                <div class="hmenu-panel">
+                    <div class="hmenu-head">
+                        <div class="hmenu-head-name">{{ auth()->user()->name }}</div>
+                        <div class="hmenu-head-meta">Administrator · signed in</div>
+                    </div>
+
+                    <div class="hmenu-group">Settings</div>
+                    <a href="{{ route('admin.settings.site') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.05A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6h.09A1.7 1.7 0 0 0 10 3.05V3a2 2 0 1 1 4 0v.05A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.05a1.7 1.7 0 0 0-1.55 1z"/></svg>
+                        Site settings
+                    </a>
+                    <a href="{{ route('admin.settings.password') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+                        Change password
+                    </a>
+
+                    <div class="hmenu-group">Sections</div>
+                    <a href="{{ route('admin.payment-methods.index') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 15h4"/></svg>
+                        Payment methods
+                    </a>
+                    <a href="{{ route('admin.placeholder', ['section' => 'jobs']) }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12h18"/></svg>
+                        Jobs <span class="nav-soon" style="margin-left:auto">M5</span>
+                    </a>
+                    <a href="{{ route('admin.placeholder', ['section' => 'escrow']) }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+                        Escrow &amp; releases <span class="nav-soon" style="margin-left:auto">M5</span>
+                    </a>
+
+                    <hr>
+
+                    <a href="{{ route('home') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
+                        View customer site
+                    </a>
+
+                    <form method="POST" action="{{ route('admin.logout') }}" style="margin:0">
+                        @csrf
+                        <button type="submit">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+                            Sign out
+                        </button>
+                    </form>
+                </div>
+            </details>
         </div>
 
         <main class="wrap">
