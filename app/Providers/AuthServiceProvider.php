@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\DepositRequest;
 use App\Models\Job;
 use App\Models\Portfolio;
 use App\Models\User;
+use App\Policies\DepositRequestPolicy;
 use App\Policies\FreelancerProfilePolicy;
 use App\Policies\JobPolicy;
 use App\Policies\PortfolioPolicy;
@@ -26,5 +28,6 @@ class AuthServiceProvider extends ServiceProvider
         User::class => FreelancerProfilePolicy::class,
         Portfolio::class => PortfolioPolicy::class,
         Job::class => JobPolicy::class,
+        DepositRequest::class => DepositRequestPolicy::class,
     ];
 }

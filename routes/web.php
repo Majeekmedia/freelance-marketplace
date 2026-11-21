@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepositController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobManageController;
 use App\Http\Controllers\PortfolioController;
@@ -73,6 +74,25 @@ Route::middleware('auth')->group(function (): void {
      * the signed-in user's, so there is no id to tamper with (FR-018).
      */
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Deposits (FR-039)
+|--------------------------------------------------------------------------
+| Posting a deposit is gated on an approved poster: a pending account has no
+| business claiming a transfer. Reading the proof is authorised per record in
+| the controller, because the image is only for the poster and an admin.
+*/
+Route::middleware(['auth', 'account'])->group(function (): void {
+    Route::get('/wallet/deposits', [DepositController::class, 'index'])->name('wallet.deposits.index');
+    Route::post('/wallet/deposits', [DepositController::class, 'store'])->name('wallet.deposits.store');
+    Route::get('/wallet/deposits/{deposit}', [DepositController::class, 'show'])
+        ->whereNumber('deposit')
+        ->name('wallet.deposits.show');
+    Route::get('/wallet/deposits/{deposit}/proof', [DepositController::class, 'proof'])
+        ->whereNumber('deposit')
+        ->name('wallet.deposits.proof');
 });
 
 /*

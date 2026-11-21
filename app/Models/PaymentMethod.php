@@ -163,6 +163,18 @@ class PaymentMethod extends Model
     // ------------------------------------------------------------ display
 
     /**
+     * The currency a deposit via this method is denominated in.
+     *
+     * Every method is USD (FR-036: wallets are USD only). Kept as a method rather
+     * than inlined so a future non-USD method has one obvious place to change,
+     * instead of a literal 'USD' scattered across controllers.
+     */
+    public function currencyCode(): string
+    {
+        return \App\Domain\Currency::base()->value;
+    }
+
+    /**
      * One-line summary for the admin list and the funding page.
      *
      * Never a credential: an account number and a public wallet address are the

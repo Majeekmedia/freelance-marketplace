@@ -38,6 +38,27 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Deposit proof images (FR-039).
+         *
+         * A dedicated disk rather than reusing `local`, for two reasons:
+         *
+         *  1. Intent. The root says `proofs`, so nobody ever has to reason about
+         *     whether a file under app/private is safe to serve.
+         *  2. `serve => false` is explicit. The `local` disk sets `serve => true`,
+         *     which registers a route Laravel's `storage:serve` can use. A bank
+         *     transfer screenshot must never be reachable that way, so this disk
+         *     deliberately disables it and every read goes through an authorised
+         *     controller instead.
+         */
+        'proofs' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/proofs'),
+            'serve' => false,
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

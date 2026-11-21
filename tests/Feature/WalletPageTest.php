@@ -41,17 +41,37 @@ it('shows an honest empty state for a user with no ledger rows', function (): vo
         ->assertSee('$0.00');
 });
 
-it('has no route that takes a user id for the wallet', function (): void {
-    // If a `/wallet/{user}` route ever appears, this fails. That route would let
-    // someone change an id and read another person's money.
-    $walletRoutes = collect(app('router')->getRoutes()->getRoutes())
-        ->filter(fn ($r): bool => str_starts_with($r->uri(), 'wallet'));
+it('has no wallet route that takes a user id', function (): void {
+    // The rule is about *whose money*, not about any parameter at all.
+    //
+    // `/wallet/deposits/{deposit}` is fine: that is a record the policy scopes to
+    // its owner. What must never exist is `/wallet/{user}` or
+    // `/wallet/{id}` — a route where changing the id shows another person's
+    // balance. So this check targets the wallet root specifically.
+    $routes = collect(app('router')->getRoutes()->getRoutes());
 
-    expect($walletRoutes)->not->toBeEmpty();
+    $walletRoot = $routes->first(fn ($r): bool => $r->uri() === 'wallet');
+    expect($walletRoot)->not->toBeNull('The wallet root route is missing.');
 
-    foreach ($walletRoutes as $route) {
-        expect($route->uri())->not->toContain('{');
-    }
+    // No route may sit directly under /wallet with a wildcard segment.
+    $offenders = $routes
+        ->filter(fn ($r): bool => preg_match('#^wallet/\{[^}]+\}$#', $r->uri()) === 1)
+        ->map(fn ($r): string => $r->uri())
+        ->values()
+        ->all();
+
+    expect($offenders)->toBe([], 'A wallet route takes a bare id: '.implode(', ', $offenders));
+
+    // And every wallet route must be scoped or authorised: either it has no
+    // wildcard, or the wildcard segment names a record (deposits), never a user.
+    $suspicious = $routes
+        ->filter(fn ($r): bool => str_starts_with($r->uri(), 'wallet/'))
+        ->filter(fn ($r): bool => preg_match('#^wallet/\{(user|id)\}#', $r->uri()) === 1)
+        ->map(fn ($r): string => $r->uri())
+        ->values()
+        ->all();
+
+    expect($suspicious)->toBe([], 'A wallet route takes a user id: '.implode(', ', $suspicious));
 });
 
 it('requires authentication for the wallet', function (): void {

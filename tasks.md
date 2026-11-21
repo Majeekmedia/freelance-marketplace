@@ -154,14 +154,15 @@
 
 ### T-011c — Poster deposit request with proof upload
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M4
 - **Requirements:** FR-039
-- **Files:** `deposit_requests` migration, `DepositController`, proof upload to private disk, funding page
-- **Depends:** T-011b
+- **Files:** `deposit_requests` migration, `DepositRequest` model, `DepositStatus`, `DepositController`, `StoreDepositRequest`, `DepositRequestPolicy`, `DepositProof`, funding page + detail views, `proofs` disk
+- **Depends:** T-011b (done)
 - **Verify:** a submitted request is `pending` and the balance is still 0; a disabled method reference is rejected; a non-image proof is rejected; `method_snapshot` is populated; the proof is unreadable by another user
-- **Evidence:**
+- **Evidence:** `.aidev/evidence/M4-T011c-deposits.md` — passed 23 · failed 0 · blocked 0; suite 328 passed; privacy matrix 7/7 over real HTTP
 - **Risk:** medium
+- **Notes:** the "submit credits nothing" guarantee was proven by injecting an auto-credit violation — two tests failed, then passed once removed. Proofs live on a dedicated `proofs` disk with `serve => false`; `/storage/...` probes return 403/404, never 200.
 
 ### T-011d — Admin deposit approval queue
 
