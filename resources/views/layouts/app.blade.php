@@ -363,6 +363,7 @@
             <nav class="topnav" aria-label="Sections">
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.users.index') }}">Accounts</a>
+                    <a href="{{ route('admin.deposits.index') }}">Deposits</a>
                 @endif
                 @if(auth()->user()->isFreelancer())
                     <a href="{{ route('portfolio.index') }}">Portfolio</a>
@@ -466,6 +467,10 @@
                             <a href="{{ route('admin.users.index') }}">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19a6.4 6.4 0 0 1 12.4 0"/><path d="M17 8.5h4M19 6.5v4"/></svg>
                                 Manage accounts
+                            </a>
+                            <a href="{{ route('admin.deposits.index') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19"/><path d="m7 15 2 2 4-4"/></svg>
+                                Deposit review
                             </a>
                         @endif
 

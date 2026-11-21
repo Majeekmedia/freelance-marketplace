@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\DepositController as AdminDepositController;
 use App\Http\Controllers\Admin\PaymentMethodController as AdminPaymentMethodController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -216,4 +217,25 @@ Route::middleware(['auth', 'admin', 'account'])
         Route::put('/payment-methods/{paymentMethod}', [AdminPaymentMethodController::class, 'update'])->name('payment-methods.update');
         Route::post('/payment-methods/{paymentMethod}/toggle', [AdminPaymentMethodController::class, 'toggle'])->name('payment-methods.toggle');
         Route::delete('/payment-methods/{paymentMethod}', [AdminPaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
+
+        /*
+         * Deposit review queue (FR-040).
+         *
+         * Approving is the only path in the product that creates money, so both
+         * decisions are POST and the service behind them re-checks the status
+         * under a row lock.
+         */
+        Route::get('/deposits', [AdminDepositController::class, 'index'])->name('deposits.index');
+        Route::get('/deposits/{deposit}', [AdminDepositController::class, 'show'])
+            ->whereNumber('deposit')
+            ->name('deposits.show');
+        Route::get('/deposits/{deposit}/proof', [AdminDepositController::class, 'proof'])
+            ->whereNumber('deposit')
+            ->name('deposits.proof');
+        Route::post('/deposits/{deposit}/approve', [AdminDepositController::class, 'approve'])
+            ->whereNumber('deposit')
+            ->name('deposits.approve');
+        Route::post('/deposits/{deposit}/reject', [AdminDepositController::class, 'reject'])
+            ->whereNumber('deposit')
+            ->name('deposits.reject');
     });

@@ -166,14 +166,15 @@
 
 ### T-011d — Admin deposit approval queue
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M4
-- **Requirements:** FR-040
-- **Files:** `Admin\DepositController`, approval views, ledger wiring
-- **Depends:** T-011c
+- **Requirements:** FR-040, FR-028
+- **Files:** `audit_logs` migration, `AuditLog`, `AuditLogger`, `DepositApprovalService`, `Admin\DepositController`, `ApproveDepositRequest`, `RejectDepositRequest`, queue + detail views
+- **Depends:** T-011c (done)
 - **Verify:** approving creates exactly one `deposit_credit` row for the **chosen** amount and the balance rises by exactly that; approving twice is rejected; rejecting credits nothing and records the reason; each action writes one audit row
-- **Evidence:**
+- **Evidence:** `.aidev/evidence/M4-T011d-approval.md` — passed 22 · failed 0 · blocked 0; suite 350 passed; HTTP proof of single-credit
 - **Risk:** **high — money**
+- **Notes:** double-approval guard proven by disabling it — three tests failed, including the service-layer one. `lockForUpdate` closes the time-of-check window. Controller now checks admin-ness and lets the service own the pending-state check so a retry gets "already approved" instead of a bare 403.
 
 ### T-012 — Admin wallet credit/debit with reason + audit
 
