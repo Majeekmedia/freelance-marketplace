@@ -359,12 +359,15 @@
                 Inline navigation: desktop only. On phones these destinations are
                 served by the bottom nav, so repeating them in the header was
                 duplicate chrome competing for the same space.
+
+                Note the absence of any admin link. The admin console is a
+                separate surface with its own layout and its own sign-in; putting
+                an "Accounts" link in a customer's menu mixed two mental models
+                and made the customer nav worse for everyone. An admin browsing
+                the customer app sees exactly what a customer sees, and reaches
+                the console by going to /admin.
             --}}
             <nav class="topnav" aria-label="Sections">
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.users.index') }}">Accounts</a>
-                    <a href="{{ route('admin.deposits.index') }}">Deposits</a>
-                @endif
                 @if(auth()->user()->isFreelancer())
                     <a href="{{ route('portfolio.index') }}">Portfolio</a>
                     <a href="{{ route('profile.edit') }}">Profile</a>
@@ -464,13 +467,16 @@
                         @endif
 
                         @if($navUser->isAdmin())
-                            <a href="{{ route('admin.users.index') }}">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19a6.4 6.4 0 0 1 12.4 0"/><path d="M17 8.5h4M19 6.5v4"/></svg>
-                                Manage accounts
-                            </a>
-                            <a href="{{ route('admin.deposits.index') }}">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19"/><path d="m7 15 2 2 4-4"/></svg>
-                                Deposit review
+                            {{--
+                                One link to the console, not a copy of its menu.
+
+                                The admin nav lives in the admin layout; duplicating
+                                two of its items here meant the customer menu had to
+                                grow every time the console gained a section.
+                            --}}
+                            <a href="{{ route('admin.overview') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                                Admin console
                             </a>
                         @endif
 
@@ -605,10 +611,10 @@
         @endif
 
         @if ($navRole === 'admin')
-            <a href="{{ route('admin.users.index') }}" class="{{ $isActive('admin.*') }}"
-               @if (request()->routeIs('admin.*')) aria-current="page" @endif>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19a6.4 6.4 0 0 1 12.4 0"/><path d="M17 8.5h4M19 6.5v4"/></svg>
-                <span>Accounts</span>
+            {{-- Points at the console, whose own layout carries the real menu. --}}
+            <a href="{{ route('admin.overview') }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Console</span>
             </a>
         @endif
     </nav>

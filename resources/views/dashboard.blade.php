@@ -21,11 +21,18 @@
 
 <div class="card">
     @if ($dashboardView === 'admin')
+        {{--
+            An admin browsing the customer app lands here. This is deliberately
+            NOT the admin dashboard — the console is its own surface with its own
+            sign-in and layout. Presenting a half-console here is what made the
+            two experiences blur together.
+        --}}
         <h2 style="font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .6rem">Administration</h2>
         <p style="font-size:.875rem;color:var(--ink-2);margin:0 0 1rem">
-            {{ \App\Models\User::pending()->count() }} account(s) awaiting approval.
+            Admin work happens in a separate console, with its own navigation and
+            its own sign-in.
         </p>
-        <a class="btn" href="{{ route('admin.users.index') }}">Review accounts</a>
+        <a class="btn" href="{{ route('admin.overview') }}">Open admin console</a>
 
     @elseif ($dashboardView === 'poster')
         <h2 style="font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .6rem">Your hiring</h2>

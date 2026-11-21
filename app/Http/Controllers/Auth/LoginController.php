@@ -60,9 +60,16 @@ class LoginController extends Controller
 
         // Status is checked AFTER credentials so that a suspended account gets
         // the same message as a wrong password — status must not leak either.
+        //
+        // An administrator is refused here too, with the identical message.
+        // Admins have a separate door (`/admin/login`) and allowing them through
+        // the public form would make that separation decorative. Saying "use the
+        // admin login" would confirm the address is an administrator, which is
+        // exactly the fact worth hiding — so this path is byte-identical to a
+        // wrong password.
         $user = Auth::user();
 
-        if ($user !== null && ! $user->canAuthenticate()) {
+        if ($user !== null && (! $user->canAuthenticate() || $user->isAdmin())) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

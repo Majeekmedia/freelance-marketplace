@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\DepositController as AdminDepositController;
+use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\PaymentMethodController as AdminPaymentMethodController;
+use App\Http\Controllers\Admin\PlaceholderController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -188,11 +191,54 @@ Route::middleware('auth')->group(function (): void {
 |               this is defence in depth rather than the primary control
 */
 
+/*
+|--------------------------------------------------------------------------
+| Admin console
+|--------------------------------------------------------------------------
+| A separate surface from the customer app: its own sign-in, its own layout,
+| its own navigation. Two reasons, both deliberate:
+|
+|  1. The public /login is the page a phishing kit clones. If a privileged
+|     session could be created from it, the admin door would be decorative.
+|  2. Admin navigation shares almost nothing with the customer app. Bolting
+|     "Accounts" into a freelancer's menu made both experiences worse.
+|
+| The login routes sit OUTSIDE the `admin` gate — you cannot be an admin before
+| you have signed in.
+*/
+
+Route::prefix('admin')->name('admin.')->group(function (): void {
+    Route::middleware('guest')->group(function (): void {
+        Route::get('/login', [AdminLoginController::class, 'create'])->name('login');
+        Route::post('/login', [AdminLoginController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('login.store');
+    });
+
+    Route::post('/logout', [AdminLoginController::class, 'destroy'])
+        ->middleware('auth')
+        ->name('logout');
+});
+
+/*
+| The protected console.
+|
+| Both gates:
+|   `admin`   → requires the admin type (404 otherwise, so the area is not
+|               confirmed to accounts that have no business knowing)
+|   `account` → requires an approved status; an admin is created approved, so
+|               this is defence in depth rather than the primary control
+*/
 Route::middleware(['auth', 'admin', 'account'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
-        Route::redirect('/', '/admin/users')->name('home');
+        Route::get('/', OverviewController::class)->name('overview');
+        Route::redirect('/home', '/admin')->name('home');
+
+        // Sections whose feature is not built yet. Named routes so the nav can
+        // link honestly instead of hiding items.
+        Route::get('/soon/{section}', PlaceholderController::class)->name('placeholder');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
