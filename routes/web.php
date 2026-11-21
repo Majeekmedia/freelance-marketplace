@@ -16,6 +16,8 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\FreelancerDashboardController;
+use App\Http\Controllers\FreelancerWorkController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobManageController;
@@ -168,12 +170,23 @@ Route::middleware(['auth', 'account'])->group(function (): void {
 */
 
 Route::middleware('auth')->group(function (): void {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    /*
+     * A freelancer's own work, in two states (FR-018).
+     *
+     * Deliberately two pages rather than one filterable list: "what am I in the
+     * middle of" and "what have I finished and been paid for" are different
+     * questions, and a freelancer should not have to filter to answer either.
+     *
+     * The controller scopes both to `hired_freelancer_id`, so there is no id to
+     * tamper with — the same reasoning as the wallet route.
+     */
+    Route::get('/work/active', [FreelancerWorkController::class, 'active'])->name('freelancer.work.active');
+    Route::get('/work/completed', [FreelancerWorkController::class, 'completed'])->name('freelancer.work.completed');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
 
-    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
-    Route::post('/portfolio', [PortfolioController::class, 'store'])
+    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');    Route::post('/portfolio', [PortfolioController::class, 'store'])
         ->middleware('account')
         ->name('portfolio.store');
     Route::put('/portfolio/{portfolio}', [PortfolioController::class, 'update'])

@@ -13,7 +13,7 @@
 
 ### M1 — Foundation: money, users, branding
 
-- **Status:** in-progress
+- **Status:** done
 - **Requirements:** FR-030, FR-003, FR-024, FR-027, FR-035
 - **Files:** scaffold, `Money` value object, `users` + `settings` migrations, `Brand` helper, base layout
 - **Tests:** `MoneyTest` proves integer-cent arithmetic exactly; factory creates a pending user; branding change updates header, footer and `<title>`
@@ -23,7 +23,7 @@
 
 ### M2 — Accounts: auth and approval gates
 
-- **Status:** todo
+- **Status:** done
 - **Requirements:** FR-005, FR-006, FR-004, FR-024
 - **Files:** auth controllers/views, `AccountGate`, `AdminGate`, rate limiters, admin user management
 - **Tests:** register/login/logout/reset; reset token single-use; throttling; pending user blocked; poster denied `/admin`
@@ -33,7 +33,7 @@
 
 ### M3 — Freelancer identity: profile and portfolio
 
-- **Status:** todo
+- **Status:** done
 - **Requirements:** FR-007, FR-008
 - **Files:** `freelancer_profiles`, `portfolios`, profile CRUD, public profile page
 - **Tests:** profile persists; public page leaks no private field; A cannot edit B's portfolio
@@ -43,7 +43,7 @@
 
 ### M4 — Ledger, deposits and admin money controls
 
-- **Status:** todo
+- **Status:** in-progress
 - **Requirements:** FR-029, FR-018, FR-041, FR-038, FR-039, FR-040, FR-022, FR-028, FR-032
 - **Files:** `wallets`, `ledger_entries`, `payment_methods`, `deposit_requests`, `LedgerService`, `WalletService`, admin wallet + payment method + deposit UI, poster funding page
 - **Tests:** derived balance equals ledger sum and **no balance column exists**; ledger immutable; deposit request credits nothing until approved; admin approval credits the chosen amount exactly once; disabled method hidden and rejected; adjustment requires a reason; audit row per admin action; milestone sum validation

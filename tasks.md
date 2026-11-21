@@ -20,7 +20,7 @@
 
 ### T-001 — Application foundation
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M1
 - **Requirements:** FR-005
 - **Files:** project scaffold, `.env.example`, health route, `config/`
@@ -31,7 +31,7 @@
 
 ### T-002 — Money value object and float guard
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M1
 - **Requirements:** FR-030
 - **Files:** `app/Domain/Money.php`, `tests/Unit/MoneyTest.php`
@@ -42,7 +42,7 @@
 
 ### T-003 — Users, roles, statuses migration + model
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M1
 - **Requirements:** FR-003, FR-024
 - **Files:** `users` migration, `User` model, `UserType`/`UserStatus` enums, factory
@@ -53,7 +53,7 @@
 
 ### T-004 — Settings and branding
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M1
 - **Requirements:** FR-027, FR-035
 - **Files:** `settings` migration, `Setting` model, `Brand` helper, admin settings controller + view
@@ -64,7 +64,7 @@
 
 ### T-005 — Auth: register, login, logout, reset
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M2
 - **Requirements:** FR-005
 - **Files:** auth controllers, routes, Blade views, `password_reset_tokens`
@@ -75,7 +75,7 @@
 
 ### T-006 — Account approval gate
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M2
 - **Requirements:** FR-004
 - **Files:** `AccountGate` middleware, `AdminGate` middleware, pending-approval UI
@@ -86,7 +86,7 @@
 
 ### T-007 — Rate limiting and generic auth errors
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M2
 - **Requirements:** FR-006
 - **Files:** `RateLimiter` config, login/register/reset throttles, error copy
@@ -97,7 +97,7 @@
 
 ### T-008 — Admin account management
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M2
 - **Requirements:** FR-024
 - **Files:** `Admin\UserController`, views, audit wiring
@@ -120,7 +120,7 @@
 
 ### T-010 — Categories and job creation (draft)
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M4
 - **Requirements:** FR-009
 - **Files:** `categories`, `jobs`, `milestones` migrations + models, `JobManageController`
@@ -143,7 +143,7 @@
 
 ### T-011b — Admin payment methods (bank + crypto, enable/disable)
 
-- **Status:** todo
+- **Status:** done
 - **Milestone:** M4
 - **Requirements:** FR-038
 - **Files:** `payment_methods` migration, `PaymentMethod` model, admin CRUD + toggle views
